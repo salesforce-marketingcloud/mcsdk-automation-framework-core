@@ -108,7 +108,6 @@ class RepoClient:
 
     def checkout(self, branch, new=False, auto_create=True):
         """ Executes a git checkout command of the given branch """
-        chdir(self.__repo_dir)
 
         # logging the working directory for debug
         print('----- Branch checkout {new}: -----'.format(new='NEW' if new is True else ''))
@@ -118,6 +117,8 @@ class RepoClient:
         if not new and not auto_create and not self.branch_exists(branch):
             print('Branch does not exist and will not be created')
             return 255
+
+        chdir(self.__repo_dir)
 
         # Command spec
         cmd = ['git', 'checkout', branch]
