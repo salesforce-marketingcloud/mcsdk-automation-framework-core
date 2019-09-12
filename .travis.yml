@@ -6,12 +6,6 @@ addons:
   apt:
     update: true
 
-branches:
-  only:
-    - develop
-    - dev
-    - master
-
 stages:
   - pipeline
 
