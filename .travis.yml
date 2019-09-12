@@ -1,0 +1,25 @@
+language: python
+dist: bionic
+sudo: required
+
+addons:
+  apt:
+    update: true
+
+branches:
+  only:
+    - develop
+    - dev
+    - master
+
+stages:
+  - pipeline
+
+install:
+  - pip install --user -r requirements.txt
+
+jobs:
+  include:
+    - stage: pipeline
+      name: "Pipeline process"
+      script: "python src/pipeline/main.py"
