@@ -45,6 +45,23 @@ class RepoClient:
         print('Cloned repo {repo} to directory {dir}'.format(repo=self.__repo_name, dir=self.__repo_dir))
         return 0
 
+    def branch_exists(self, branch):
+        """ Checks if the branch exists """
+        chdir(self.__repo_dir)
+
+        command = Command(['git', 'branch'])
+        command.run()
+
+        chdir(self.__root_dir)  # Get back to previous directory
+
+        output = command.get_output()
+        lines = output.split('\n')
+        for line in lines:
+            if line.find(branch) != -1:
+                return True
+
+        return False
+
     def branch(self):
         """ Returns the current branch """
         chdir(self.__repo_dir)
@@ -68,6 +85,7 @@ class RepoClient:
 
         # logging the working directory for debug
         print('----- Branch push: -----')
+        print('Repo name: ' + self.__repo_name)
         print('Branch name: ' + branch)
 
         # Command spec
@@ -94,7 +112,12 @@ class RepoClient:
 
         # logging the working directory for debug
         print('----- Branch checkout {new}: -----'.format(new='NEW' if new is True else ''))
+        print('Repo name: ' + self.__repo_name)
         print('Branch name: ' + branch)
+
+        if not new and not auto_create and not self.branch_exists(branch):
+            print('Branch does not exist and will not be created')
+            return 255
 
         # Command spec
         cmd = ['git', 'checkout', branch]
@@ -107,13 +130,9 @@ class RepoClient:
 
         if command.returned_errors():
             if command.get_output().find('did not match any file(s) known to git') != -1:
-                if auto_create:
-                    print('Branch does not exist. Trying to create it...\n')
-                    self.checkout(branch, True)  # Creating the branch
-                    self.push('origin', branch, True)  # Push to origin
-                else:
-                    print('Branch does not exist and will not be created')
-                    return 255
+                print('Branch does not exist. Trying to create it...\n')
+                self.checkout(branch, True)  # Creating the branch
+                self.push('origin', branch, True)  # Push to origin
             else:
                 print('Unknown error occurred')
                 print(command.get_output())
