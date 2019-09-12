@@ -1,4 +1,31 @@
 import os
+import requests
 
-for param in os.environ.keys():
-    print("%20s %s" % (param, os.environ[param]))
+# Environment variables
+TRAVIS_TOKEN = os.environ.get('TRAVIS_TOKEN')
+TRAVIS_BUILD_DIR = os.path.dirname(os.environ.get('TRAVIS_BUILD_DIR'))
+TRAVIS_BASE_BRANCH = os.environ.get('TRAVIS_BRANCH')
+
+# data = {
+#     'request': {
+#         'branch': TRAVIS_BASE_BRANCH,
+#         'config': {
+#             'env': {
+#                 'INTEGRATION_BRANCH': os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
+#             }
+#         }
+#     }
+# }
+#
+# headers = {
+#     'Accept': 'application/json',
+#     'Content-type': 'application/json',
+#     'Travis-API-Version': '3',
+#     'Authorization': 'token {token}'.format(token=TRAVIS_TOKEN)
+# }
+#
+# response = requests.get(
+#     'https://api.travis-ci.com/repo/salesforce-marketingcloud/MCSDK-Automation-Framework-PHP/requests',
+#     headers=headers,
+#     data=data
+# )

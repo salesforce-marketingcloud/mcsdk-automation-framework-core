@@ -21,9 +21,9 @@ def run(config, code_generator, code_setup, code_integration):
     repo_sdk_name = config['repos']['sdk']['name']
     repo_sdk_dir = config['repos']['sdk']['dir']
 
-    # TODO: update this with env
-    branch_name = '1.0'
-    auto_branch = branch_name + '_automation'
+    base_branch = TRAVIS_BASE_BRANCH
+    head_branch = TRAVIS_PR_BRANCH
+    integration_branch = 'ci/' + base_branch
 
     # Cloning the CORE repository in order to have access to swagger
     core_repo = RepoClient(TRAVIS_BUILD_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
@@ -34,9 +34,9 @@ def run(config, code_generator, code_setup, code_integration):
         print('Could not clone repository')
         exit(255)
 
-    # if core_repo.checkout(branch_name, False, False) != 0:
-    #     print("Core branch {branch} does not exist and will not be created automatically".format(branch=branch_name))
-    #     exit(255)
+    if core_repo.checkout(head_branch, False, False) != 0:
+        print("Branch {branch} does not exist and will not be created.".format(branch=head_branch))
+        exit(255)
 
     # Cloning the SDK repo
     sdk_repo = RepoClient(TRAVIS_BUILD_DIR, GITHUB_TOKEN, repo_sdk_owner, repo_sdk_name, repo_sdk_dir)
@@ -47,11 +47,11 @@ def run(config, code_generator, code_setup, code_integration):
         print('Could not clone repository')
         exit(255)
 
-    if sdk_repo.checkout(branch_name) != 0:
+    if sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
 
-    if sdk_repo.checkout(auto_branch) != 0:
+    if sdk_repo.checkout(integration_branch) != 0:
         print("Could not checkout the integration branch for the SDK")
         exit(255)
 
@@ -70,7 +70,7 @@ def run(config, code_generator, code_setup, code_integration):
     # Finishing touches
     if sdk_repo.stage_changes() == 0 and sdk_repo.commit('Auto-update') == 0:
         # Doing the push & PR (cascaded for readability)
-        if sdk_repo.push('origin', auto_branch, True) == 0:
-            sdk_repo.make_pull_request(branch_name, auto_branch)
+        if sdk_repo.push('origin', integration_branch, True) == 0:
+            sdk_repo.make_pull_request(base_branch, integration_branch)
 
     exit(0)

@@ -8,6 +8,8 @@ validator.validate_env()
 # Define constants
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 TRAVIS_BUILD_DIR = os.path.dirname(os.environ.get('TRAVIS_BUILD_DIR'))
+TRAVIS_PR_BRANCH = os.environ.get('INTEGRATION_BRANCH')
+TRAVIS_BASE_BRANCH = os.environ.get('TRAVIS_BRANCH')
 BUILDER_REPO_DIR = os.path.dirname(os.path.dirname(os.getcwd()))
 
 # Define global vars
