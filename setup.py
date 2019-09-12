@@ -8,7 +8,8 @@ setup(
         'mcsdk',
         'mcsdk.git',
         'mcsdk.integration',
-        'mcsdk.integration.os'
+        'mcsdk.integration.os',
+        'mcsdk.code'
     ],
     url='https://github.com/salesforce-marketingcloud/MCSDK-Automation-Framework-Core',
     license='',

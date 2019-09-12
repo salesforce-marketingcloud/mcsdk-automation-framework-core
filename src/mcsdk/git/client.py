@@ -121,7 +121,7 @@ class RepoClient:
         chdir(self.__repo_dir)
 
         # Command spec
-        cmd = ['git', 'checkout', branch]
+        cmd = ['git', 'checkout', '-f', branch]
         if new and auto_create:
             cmd.insert(2, '-b')
 
