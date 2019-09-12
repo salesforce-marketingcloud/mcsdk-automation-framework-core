@@ -88,7 +88,7 @@ class RepoClient:
         print('Branch {branch} has been pushed to {remote}'.format(remote=remote, branch=branch))
         return 0
 
-    def checkout(self, branch, new=False):
+    def checkout(self, branch, new=False, auto_create=True):
         """ Executes a git checkout command of the given branch """
         chdir(self.__repo_dir)
 
@@ -107,9 +107,13 @@ class RepoClient:
 
         if command.returned_errors():
             if command.get_output().find('did not match any file(s) known to git') != -1:
-                print('Branch does not exist. Trying to create it...\n')
-                self.checkout(branch, True)  # Creating the branch
-                self.push('origin', branch, True)  # Push to origin
+                if auto_create:
+                    print('Branch does not exist. Trying to create it...\n')
+                    self.checkout(branch, True)  # Creating the branch
+                    self.push('origin', branch, True)  # Push to origin
+                else:
+                    print('Branch does not exist and will not be created')
+                    return 255
             else:
                 print('Unknown error occurred')
                 print(command.get_output())
