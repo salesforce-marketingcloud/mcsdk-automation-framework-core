@@ -30,7 +30,7 @@ class Command:
 
     def get_command(self):
         """ Returns the string representation of the command """
-        return " ".join(self.__command)
+        return self.__command
 
     def get_output(self):
         """
