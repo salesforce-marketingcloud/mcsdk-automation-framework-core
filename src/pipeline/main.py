@@ -1,6 +1,6 @@
 import os
 import requests
-from ..mcsdk.integration.os import process
+from mcsdk.integration.os import process
 
 # Environment variables
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
