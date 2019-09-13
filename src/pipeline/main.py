@@ -8,7 +8,7 @@ TRAVIS_TOKEN = os.environ.get('TRAVIS_TOKEN')
 TRAVIS_BUILD_DIR = os.path.dirname(os.environ.get('TRAVIS_BUILD_DIR'))
 TRAVIS_BASE_BRANCH = os.environ.get('TRAVIS_BRANCH')
 
-command = process.Command("travis login --github-token {token} && travis token".format(token=GITHUB_TOKEN))
+command = process.Command("travis help  login".format(token=GITHUB_TOKEN))
 command.run()
 
 print(command.get_output())
