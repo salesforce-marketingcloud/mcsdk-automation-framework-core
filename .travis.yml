@@ -6,6 +6,10 @@ addons:
   apt:
     update: true
 
+branches:
+  except:
+    - master
+
 python:
   - "3.7"
 
