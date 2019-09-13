@@ -31,3 +31,5 @@ response = requests.get(
     headers=headers,
     data=data
 )
+
+print(response.content)
