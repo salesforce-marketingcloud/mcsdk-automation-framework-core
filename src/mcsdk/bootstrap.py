@@ -8,9 +8,12 @@ validator.validate_env()
 # Define constants
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 TRAVIS_BUILD_DIR = os.environ.get('TRAVIS_BUILD_DIR')
-TRAVIS_ROOT_DIR = os.path.dirname(TRAVIS_BUILD_DIR)
+TRAVIS_REPO_OWNER_DIR = os.path.dirname(TRAVIS_BUILD_DIR)
 TRAVIS_BASE_BRANCH = os.environ.get('BASE_BRANCH')
 TRAVIS_HEAD_BRANCH = os.environ.get('HEAD_BRANCH')
+
+print("Travis build directory is: " + TRAVIS_BUILD_DIR)
+print("Travis owner repo directory is: " + TRAVIS_REPO_OWNER_DIR)
 
 # Define global vars
 resources_dir = os.path.join(TRAVIS_BUILD_DIR, 'resources')
@@ -19,8 +22,8 @@ templates_dir = os.path.join(resources_dir, 'templates')
 
 # Loading the configuration
 cfg = configurator.yaml_import(config_dir)
-cfg['repos']['core']['dir'] = os.path.abspath(os.path.join(TRAVIS_ROOT_DIR, cfg['repos']['core']['name']))
-cfg['repos']['sdk']['dir'] = os.path.abspath(os.path.join(TRAVIS_ROOT_DIR, cfg['repos']['sdk']['name']))
+cfg['repos']['core']['dir'] = os.path.abspath(os.path.join(TRAVIS_REPO_OWNER_DIR, cfg['repos']['core']['name']))
+cfg['repos']['sdk']['dir'] = os.path.abspath(os.path.join(TRAVIS_REPO_OWNER_DIR, cfg['repos']['sdk']['name']))
 
 # Custom stuff...manual work for now
 rep = ['{%repos_core_dir%}', cfg['repos']['core']['dir']]
