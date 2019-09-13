@@ -123,7 +123,7 @@ class RepoClient:
         # Command spec
         cmd = ['git', 'checkout', '-f', branch]
         if new and auto_create:
-            cmd.insert(2, '-b')
+            cmd = ['git', 'checkout', '-b', branch]
 
         # Command to checkout the repo
         command = Command(cmd)
