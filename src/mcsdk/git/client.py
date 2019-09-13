@@ -107,9 +107,9 @@ class RepoClient:
         print('Branch name: ' + branch)
 
         # Command spec
-        cmd = ['git', 'push', remote, branch]
+        cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
         if new:
-            cmd.insert(2, '-u')
+            cmd = 'git push -u {remote} {branch}'.format(remote=remote, branch=branch)
 
         # Command to push to the repo
         command = Command(cmd)
@@ -139,9 +139,9 @@ class RepoClient:
         chdir(self.__repo_dir)
 
         # Command spec
-        cmd = ['git', 'checkout', '-f', branch]
+        cmd = 'git checkout -f {branch}'.format(branch=branch)
         if new and auto_create:
-            cmd = ['git', 'checkout', '-b', branch]
+            cmd = 'git checkout -b {branch}'.format(branch=branch)
 
         # Command to checkout the repo
         command = Command(cmd)
@@ -172,7 +172,7 @@ class RepoClient:
         print('----- Stage changes: -----')
 
         # Command to checkout the repo
-        command = Command(['git', 'add', '--all'])
+        command = Command('git add --all')
         command.run()
 
         chdir(self.__root_dir)  # Get back to previous directory
@@ -194,7 +194,7 @@ class RepoClient:
         print('----- Committing changes: -----')
 
         # Command to checkout the repo
-        command = Command(['git', 'commit', '-m', message])
+        command = Command('git commit -m {message}'.format(message=message))
         command.run()
 
         chdir(self.__root_dir)  # Get back to previous directory
