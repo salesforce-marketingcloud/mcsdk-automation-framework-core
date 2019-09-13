@@ -49,7 +49,7 @@ class RepoClient:
         """ Checks if the branch exists """
         chdir(self.__repo_dir)
 
-        command = Command(['git', 'branch'])
+        command = Command(['git', 'branch', '-a'])
         command.run()
 
         chdir(self.__root_dir)  # Get back to previous directory
