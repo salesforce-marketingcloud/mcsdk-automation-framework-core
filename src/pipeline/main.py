@@ -7,7 +7,7 @@ url = 'https://api.travis-ci.com/repo/{repo}/requests'.format(repo=parse.quote(r
 base_branch = os.environ.get('TRAVIS_BRANCH')
 head_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
 
-print('Automatic PR will be made from {base} to {head}'.format(base=base_branch, head=head_branch))
+print('Automatic PR will be made from {head} to {base}'.format(base=base_branch, head=head_branch))
 
 data = {
     'request': {
