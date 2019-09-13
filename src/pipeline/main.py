@@ -9,12 +9,10 @@ TRAVIS_BUILD_DIR = os.path.dirname(os.environ.get('TRAVIS_BUILD_DIR'))
 TRAVIS_BASE_BRANCH = os.environ.get('TRAVIS_BRANCH')
 
 data = {
-    'request': {
-        'branch': TRAVIS_BASE_BRANCH,
-        'config': {
-            'env': {
-                'INTEGRATION_BRANCH': os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
-            }
+    'branch': TRAVIS_BASE_BRANCH,
+    'config': {
+        'env': {
+            'INTEGRATION_BRANCH': os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
         }
     }
 }
