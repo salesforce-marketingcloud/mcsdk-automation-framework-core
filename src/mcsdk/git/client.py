@@ -54,9 +54,12 @@ class RepoClient:
         command = Command(['git', 'branch', '-a'])
         command.run()
 
+        output = command.get_output()
+
         chdir(self.__root_dir)  # Get back to previous directory
 
-        output = command.get_output()
+        print("GIT branch: " + output)
+
         lines = output.split('\n')
         for line in lines:
             if line.find(branch) != -1:
