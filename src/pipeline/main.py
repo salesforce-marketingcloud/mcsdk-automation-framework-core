@@ -4,13 +4,18 @@ import requests
 
 repo = 'salesforce-marketingcloud/MCSDK-Automation-Framework-PHP'
 url = 'https://api.travis-ci.com/repo/{repo}/requests'.format(repo=parse.quote(repo, safe=''))
+base_branch = os.environ.get('TRAVIS_BRANCH')
+head_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
+
+print('Automatic PR will be made from {base} to {head}'.format(base=base_branch, head=head_branch))
 
 data = {
     'request': {
-        'branch': os.environ.get('TRAVIS_BRANCH'),
+        'branch': base_branch,
         'config': {
             'env': {
-                'INTEGRATION_BRANCH': os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
+                'BASE_BRANCH': base_branch,
+                'HEAD_BRANCH': head_branch
             }
         }
     }

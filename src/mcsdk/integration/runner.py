@@ -22,7 +22,7 @@ def run(config, code_generator, code_setup, code_integration):
     repo_sdk_dir = config['repos']['sdk']['dir']
 
     base_branch = TRAVIS_BASE_BRANCH
-    head_branch = TRAVIS_PR_BRANCH
+    head_branch = TRAVIS_HEAD_BRANCH
     integration_branch = 'ci/' + base_branch
 
     # Cloning the CORE repository in order to have access to swagger
