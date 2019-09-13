@@ -26,7 +26,7 @@ headers = {
     'Authorization': 'token {token}'.format(token=TRAVIS_TOKEN)
 }
 
-response = requests.get(
+response = requests.post(
     'https://api.travis-ci.com/repo/salesforce-marketingcloud/MCSDK-Automation-Framework-PHP/requests',
     headers=headers,
     data=data
