@@ -26,7 +26,7 @@ def run(config, code_generator, code_setup, code_integration):
     integration_branch = 'ci/' + base_branch
 
     # Cloning the CORE repository in order to have access to swagger
-    core_repo = RepoClient(TRAVIS_BUILD_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
+    core_repo = RepoClient(TRAVIS_ROOT_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
     clone_status_code = core_repo.clone()
 
     # Check if repo folder exists or the clone just failed
@@ -39,7 +39,7 @@ def run(config, code_generator, code_setup, code_integration):
         exit(255)
 
     # Cloning the SDK repo
-    sdk_repo = RepoClient(TRAVIS_BUILD_DIR, GITHUB_TOKEN, repo_sdk_owner, repo_sdk_name, repo_sdk_dir)
+    sdk_repo = RepoClient(TRAVIS_ROOT_DIR, GITHUB_TOKEN, repo_sdk_owner, repo_sdk_name, repo_sdk_dir)
     clone_status_code = sdk_repo.clone()
 
     # Check if repo folder exists or the clone just failed
