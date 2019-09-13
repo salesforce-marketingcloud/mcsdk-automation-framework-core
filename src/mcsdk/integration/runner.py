@@ -34,8 +34,7 @@ def run(config, code_generator, code_setup, code_integration):
         print('Could not clone repository')
         exit(255)
 
-    if core_repo.checkout(head_branch, False, False) != 0:
-        print("Branch {branch} does not exist and will not be created.".format(branch=head_branch))
+    if core_repo.fetch() != 0 or core_repo.checkout(head_branch, False, False) != 0:
         exit(255)
 
     # Cloning the SDK repo

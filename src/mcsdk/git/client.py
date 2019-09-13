@@ -49,6 +49,8 @@ class RepoClient:
         """ Checks if the branch exists """
         chdir(self.__repo_dir)
 
+        print('Searching for branch: ' + branch)
+
         command = Command(['git', 'branch', '-a'])
         command.run()
 
@@ -78,6 +80,19 @@ class RepoClient:
                 return line.lstrip('* ')
 
         return output
+
+    def fetch(self):
+        """ Runs the fetch command branch """
+        chdir(self.__repo_dir)
+
+        command = Command(['git', 'fetch', '--all'])
+        command.run()
+
+        print("GIT fetch: " + command.get_output())
+
+        chdir(self.__root_dir)  # Get back to previous directory
+
+        return command.returned_errors()
 
     def push(self, remote, branch, new=False):
         """ Executes a git push command of the given branch """
