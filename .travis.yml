@@ -5,6 +5,10 @@ sudo: required
 addons:
   apt:
     update: true
+    packages:
+      - python3-pip
+      - python3-dev
+      - python3-setuptools
 
 branches:
   except:
@@ -17,11 +21,11 @@ stages:
   - pipeline
 
 install:
-  - pip install -r requirements.txt
-  - pip install dist/mcsdk-automation-framework-core-1.0.0.tar.gz
+  - pip3 install -r requirements.txt
+  - pip3 install dist/mcsdk-automation-framework-core-1.0.0.tar.gz
 
 jobs:
   include:
     - stage: pipeline
       name: "Pipeline process"
-      script: "python src/pipeline/main.py"
+      script: python3 src/pipeline/main.py
