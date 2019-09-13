@@ -1,10 +1,17 @@
 import os
 import requests
+from mcsdk.integration.os import process
 
 # Environment variables
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 TRAVIS_TOKEN = os.environ.get('TRAVIS_TOKEN')
 TRAVIS_BUILD_DIR = os.path.dirname(os.environ.get('TRAVIS_BUILD_DIR'))
 TRAVIS_BASE_BRANCH = os.environ.get('TRAVIS_BRANCH')
+
+command = process.Command("travis login --github-token {token} && travis token".format(token=GITHUB_TOKEN))
+command.run()
+
+print(command.get_output())
 
 # data = {
 #     'request': {
