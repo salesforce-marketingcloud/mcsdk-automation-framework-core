@@ -51,7 +51,7 @@ class RepoClient:
 
         print('Searching for branch: ' + branch)
 
-        command = Command(['git', 'branch', '-a'])
+        command = Command('git branch -a')
         command.run()
 
         output = command.get_output()
@@ -71,7 +71,7 @@ class RepoClient:
         """ Returns the current branch """
         chdir(self.__repo_dir)
 
-        command = Command(['git', 'branch', '-a'])
+        command = Command('git branch -a')
         command.run()
 
         chdir(self.__root_dir)  # Get back to previous directory
@@ -88,7 +88,7 @@ class RepoClient:
         """ Runs the fetch command branch """
         chdir(self.__repo_dir)
 
-        command = Command(['git', 'fetch', '--all'])
+        command = Command('git fetch --all')
         command.run()
 
         print("GIT fetch: " + command.get_output())
