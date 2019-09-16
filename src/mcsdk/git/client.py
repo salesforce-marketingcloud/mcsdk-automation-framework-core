@@ -82,9 +82,9 @@ class RepoClient:
 
     def branch_delete(self, branch):
         """ Runs the fetch command branch """
-        chdir(self.__repo_dir)
-
         self.checkout('master', False, False)
+
+        chdir(self.__repo_dir)  # The checkout above changes the directory
 
         # Local delete
         command = Command('git branch -D {branch}'.format(branch=branch))
