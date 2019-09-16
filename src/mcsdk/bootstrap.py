@@ -20,6 +20,10 @@ resources_dir = os.path.join(TRAVIS_BUILD_DIR, 'resources')
 config_dir = os.path.join(resources_dir, 'config')
 templates_dir = os.path.join(resources_dir, 'templates')
 
+if not os.path.isfile(config_dir):
+    print('Configuration file {file} does not exist'.format(file=config_dir))
+    exit(255)
+
 # Loading the configuration
 cfg = configurator.yaml_import(config_dir)
 cfg['repos']['core']['dir'] = os.path.abspath(os.path.join(TRAVIS_REPO_OWNER_DIR, cfg['repos']['core']['name']))
