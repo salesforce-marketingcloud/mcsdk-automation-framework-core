@@ -45,22 +45,26 @@ class RepoClient:
         print('Cloned repo {repo} to directory {dir}'.format(repo=self.__repo_name, dir=self.__repo_dir))
         return 0
 
-    def branch_exists(self, branch):
-        """ Checks if the branch exists """
-        chdir(self.__repo_dir)
-
-        print('Searching for branch: ' + branch)
+    def __get_branches(self):
+        """ Returns a list of current branches """
+        chdir(self.__repo_dir) # Go to repo dir
 
         command = Command('git branch -a')
         command.run()
 
-        output = command.get_output()
+        chdir(self.__root_dir)  # Go to root dir
 
-        chdir(self.__root_dir)  # Get back to previous directory
+        branches = command.get_output()
 
-        print("GIT branch: " + output)
+        print("List of branches: " + branches)
 
-        lines = output.split('\n')
+        return branches
+
+    def branch_exists(self, branch):
+        """ Checks if the branch exists """
+        print('Searching for branch: ' + branch)
+
+        lines = self.__get_branches().split('\n')
         for line in lines:
             if line.find(branch) != -1:
                 return True
@@ -69,20 +73,25 @@ class RepoClient:
 
     def branch(self):
         """ Returns the current branch """
-        chdir(self.__repo_dir)
-
-        command = Command('git branch -a')
-        command.run()
-
-        chdir(self.__root_dir)  # Get back to previous directory
-
-        output = command.get_output()
-        lines = output.split('\n')
+        lines = self.__get_branches().split('\n')
         for line in lines:
             if line.find('*') == 0:
                 return line.lstrip('* ')
 
-        return output
+        raise RuntimeError("Could not determine current branch")
+
+    def branch_delete(self, branch):
+        """ Runs the fetch command branch """
+        chdir(self.__repo_dir)
+
+        command = Command('git branch -D {branch}'.format(branch=branch))
+        command.run()
+
+        print("Branch delete: " + command.get_output())
+
+        chdir(self.__root_dir)  # Get back to previous directory
+
+        return command.returned_errors()
 
     def fetch(self):
         """ Runs the fetch command branch """
@@ -204,7 +213,13 @@ class RepoClient:
             return 255
         else:
             print('Commit OK')
-            print(command.get_output())
+
+            output = command.get_output()
+
+            if output.find('nothing to commit, working tree clean') != 0:
+                print('Branch will be deleted because there are no changes on the code')
+                self.branch_delete(self.branch())
+                return 100
 
         return 0
 
