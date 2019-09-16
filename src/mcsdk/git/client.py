@@ -84,10 +84,18 @@ class RepoClient:
         """ Runs the fetch command branch """
         chdir(self.__repo_dir)
 
+        self.checkout('master', False, False)
+
+        # Local delete
         command = Command('git branch -D {branch}'.format(branch=branch))
         command.run()
+        print("Branch delete (local): " + command.get_output())
 
-        print("Branch delete: " + command.get_output())
+        if not command.returned_errors():
+            # Remote delete
+            command = Command('git push origin --delete {branch}'.format(branch=branch))
+            command.run()
+            print("Branch delete (remote): " + command.get_output())
 
         chdir(self.__root_dir)  # Get back to previous directory
 
