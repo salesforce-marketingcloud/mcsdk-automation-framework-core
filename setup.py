@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='mcsdk-automation-framework-core',
-    version='1.0.0',
+    version='0.0.0',
     package_dir={'': 'src'},
     packages=[
         'mcsdk',
