@@ -20,6 +20,9 @@ python:
 stages:
   - pipeline
 
+before_install:
+  - python3 setup.py sdist
+
 install:
   - pip3 install -r requirements.txt
   - pip3 install dist/mcsdk-automation-framework-core-1.0.0.tar.gz
