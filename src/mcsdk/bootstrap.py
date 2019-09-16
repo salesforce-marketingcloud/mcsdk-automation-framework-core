@@ -21,7 +21,7 @@ config_dir = os.path.join(resources_dir, 'config')
 templates_dir = os.path.join(resources_dir, 'templates')
 config_file = os.sep.join([config_dir, 'ci-config.yml'])
 
-if not os.path.isfile(config_file):
+if not os.path.exists(config_file):
     print('Configuration file {file} does not exist'.format(file=config_file))
     exit(255)
 
