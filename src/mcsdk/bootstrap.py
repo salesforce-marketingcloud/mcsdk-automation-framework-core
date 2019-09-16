@@ -19,13 +19,14 @@ print("Travis owner repo directory is: " + TRAVIS_REPO_OWNER_DIR)
 resources_dir = os.path.join(TRAVIS_BUILD_DIR, 'resources')
 config_dir = os.path.join(resources_dir, 'config')
 templates_dir = os.path.join(resources_dir, 'templates')
+config_file = os.sep.join([config_dir, 'ci-config.yml'])
 
-if not os.path.isfile(config_dir):
-    print('Configuration file {file} does not exist'.format(file=config_dir))
+if not os.path.isfile(config_file):
+    print('Configuration file {file} does not exist'.format(file=config_file))
     exit(255)
 
 # Loading the configuration
-cfg = configurator.yaml_import(config_dir)
+cfg = configurator.yaml_import(config_file)
 cfg['repos']['core']['dir'] = os.path.abspath(os.path.join(TRAVIS_REPO_OWNER_DIR, cfg['repos']['core']['name']))
 cfg['repos']['sdk']['dir'] = os.path.abspath(os.path.join(TRAVIS_REPO_OWNER_DIR, cfg['repos']['sdk']['name']))
 
