@@ -64,7 +64,7 @@
             "name": "id",
             "in": "path",
             "description": "The ID of the asset to update",
-            "required": true,
+            "required": false,
             "type": "number"
           },
           {
