@@ -2,7 +2,7 @@ import os
 from urllib import parse
 import requests
 
-repo = 'salesforce-marketingcloud/MCSDK-Automation-Framework-PHP'
+repo = 'sfadincescu/mcsdk-automation-framework-php'
 url = 'https://api.travis-ci.com/repo/{repo}/requests'.format(repo=parse.quote(repo, safe=''))
 base_branch = os.environ.get('TRAVIS_BRANCH')
 head_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
