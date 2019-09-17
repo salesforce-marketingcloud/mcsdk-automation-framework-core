@@ -226,8 +226,9 @@ class RepoClient:
             print('Commit OK')
 
             output = command.get_output()
-            if output.find('nothing to commit, working tree clean') != 0:
+            if output.find('nothing to commit, working tree clean') != -1:
                 print('There are no changes on the code, so the branch will not be pushed')
+                print(output)
                 return 100
 
         return 0
