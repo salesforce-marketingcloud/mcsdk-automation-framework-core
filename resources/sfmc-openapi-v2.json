@@ -16,6 +16,43 @@
   "host": "www.exacttargetapis.com",
   "paths": {
     "/asset/v1/content/assets/{id}": {
+      "get": {
+        "tags": [
+          "asset"
+        ],
+        "summary": "getAssetById",
+        "description": "Gets an asset by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the asset",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single asset",
+            "schema": {
+              "$ref": "#/definitions/Asset"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "403": {
+            "description": "Permission error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        },
+        "operationId": "getAssetById"
+      },
       "patch": {
         "tags": [
           "asset"
