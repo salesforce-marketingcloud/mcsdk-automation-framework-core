@@ -2,7 +2,7 @@ from mcsdk.git.client import RepoClient
 from bootstrap import *
 
 
-def run(config, code_generator, code_setup, code_integration):
+def run(config, code_generator, code_setup=None, code_integration=None):
     """
     Runs the integration
 
@@ -58,18 +58,18 @@ def run(config, code_generator, code_setup, code_integration):
     code_generator.generate()
 
     # code base operations
-    if code_setup.install_dependencies() != 0:
+    if code_setup is not None and code_setup.install_dependencies() != 0:
         print('Dependencies failed to install')
         exit(255)
 
-    if code_integration.run_tests() != 0:
+    if code_integration is not None and code_integration.run_tests() != 0:
         print("Unit tests failed")
         exit(255)
 
     # Finishing touches
     if sdk_repo.stage_changes() == 0 and sdk_repo.commit('Auto-update') == 0:
-        # Doing the push & PR (cascaded for readability)
-        if sdk_repo.push('origin', integration_branch, True) == 0:
+        # Pushing the created branches & creating the PR (cascaded for readability)
+        if sdk_repo.push(base_branch, True) == 0 and sdk_repo.push('origin', integration_branch, True) == 0:
             sdk_repo.make_pull_request(base_branch, integration_branch)
 
     exit(0)

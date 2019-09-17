@@ -47,7 +47,7 @@ class RepoClient:
 
     def __get_branches(self):
         """ Returns a list of current branches """
-        chdir(self.__repo_dir) # Go to repo dir
+        chdir(self.__repo_dir)  # Go to repo dir
 
         command = Command('git branch -a')
         command.run()
@@ -81,7 +81,7 @@ class RepoClient:
         raise RuntimeError("Could not determine current branch")
 
     def branch_delete(self, branch):
-        """ Runs the fetch command branch """
+        """ Runs the branch delete command branch """
         self.checkout('master', False, False)
 
         chdir(self.__repo_dir)  # The checkout above changes the directory
@@ -139,17 +139,18 @@ class RepoClient:
             return 255
 
         print('Branch {branch} has been pushed to {remote}'.format(remote=remote, branch=branch))
+
         return 0
 
-    def checkout(self, branch, new=False, auto_create=True):
+    def checkout(self, branch, new_branch=False, auto_create=True):
         """ Executes a git checkout command of the given branch """
 
         # logging the working directory for debug
-        print('----- Branch checkout {new}: -----'.format(new='NEW' if new is True else ''))
+        print('----- Branch checkout {new}: -----'.format(new='NEW' if new_branch is True else ''))
         print('Repo name: ' + self.__repo_name)
         print('Branch name: ' + branch)
 
-        if not new and not auto_create and not self.branch_exists(branch):
+        if not new_branch and not auto_create and not self.branch_exists(branch):
             print('Branch does not exist and will not be created')
             return 255
 
@@ -157,7 +158,7 @@ class RepoClient:
 
         # Command spec
         cmd = 'git checkout -f {branch}'.format(branch=branch)
-        if new and auto_create:
+        if new_branch and auto_create:
             cmd = 'git checkout -b {branch}'.format(branch=branch)
 
         # Command to checkout the repo
@@ -168,7 +169,6 @@ class RepoClient:
             if command.get_output().find('did not match any file(s) known to git') != -1:
                 print('Branch does not exist. Trying to create it...\n')
                 self.checkout(branch, True)  # Creating the branch
-                self.push('origin', branch, True)  # Push to origin
             else:
                 print('Unknown error occurred')
                 print(command.get_output())
@@ -281,4 +281,5 @@ class RepoClient:
             return response.status_code
 
         print("Created the PR")
+
         return 0
