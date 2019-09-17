@@ -5,9 +5,6 @@ class Command:
     """ Command runner class """
 
     def __init__(self, command):
-        if not isinstance(command, list):
-            command = command.split(" ")
-
         """ Class constructor """
         self.__command = command
         self.__output = b''
@@ -33,7 +30,10 @@ class Command:
 
     def get_command(self):
         """ Returns the string representation of the command """
-        return " ".join(self.__command)
+        if isinstance(self.__command, list):
+            return " ".join(self.__command)
+
+        return self.__command
 
     def get_output(self):
         """

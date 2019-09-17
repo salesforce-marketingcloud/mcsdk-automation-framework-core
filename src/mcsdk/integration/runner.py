@@ -2,7 +2,7 @@ from mcsdk.git.client import RepoClient
 from bootstrap import *
 
 
-def run(config, code_generator, code_setup, code_integration):
+def run(config, code_generator, code_setup=None, code_integration=None):
     """
     Runs the integration
 
@@ -21,12 +21,12 @@ def run(config, code_generator, code_setup, code_integration):
     repo_sdk_name = config['repos']['sdk']['name']
     repo_sdk_dir = config['repos']['sdk']['dir']
 
-    # TODO: update this with env
-    branch_name = '1.0'
-    auto_branch = branch_name + '_automation'
+    base_branch = TRAVIS_BASE_BRANCH
+    head_branch = TRAVIS_HEAD_BRANCH
+    integration_branch = 'ci/' + base_branch
 
     # Cloning the CORE repository in order to have access to swagger
-    core_repo = RepoClient(TRAVIS_BUILD_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
+    core_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
     clone_status_code = core_repo.clone()
 
     # Check if repo folder exists or the clone just failed
@@ -34,12 +34,11 @@ def run(config, code_generator, code_setup, code_integration):
         print('Could not clone repository')
         exit(255)
 
-    # if core_repo.checkout(branch_name, False, False) != 0:
-    #     print("Core branch {branch} does not exist and will not be created automatically".format(branch=branch_name))
-    #     exit(255)
+    if core_repo.fetch() != 0 or core_repo.checkout(head_branch, False, False) != 0:
+        exit(255)
 
     # Cloning the SDK repo
-    sdk_repo = RepoClient(TRAVIS_BUILD_DIR, GITHUB_TOKEN, repo_sdk_owner, repo_sdk_name, repo_sdk_dir)
+    sdk_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_sdk_owner, repo_sdk_name, repo_sdk_dir)
     clone_status_code = sdk_repo.clone()
 
     # Check if repo folder exists or the clone just failed
@@ -47,11 +46,11 @@ def run(config, code_generator, code_setup, code_integration):
         print('Could not clone repository')
         exit(255)
 
-    if sdk_repo.checkout(branch_name) != 0:
+    if sdk_repo.checkout(base_branch, False, True) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
 
-    if sdk_repo.checkout(auto_branch) != 0:
+    if sdk_repo.checkout(integration_branch, False, True) != 0:
         print("Could not checkout the integration branch for the SDK")
         exit(255)
 
@@ -59,18 +58,18 @@ def run(config, code_generator, code_setup, code_integration):
     code_generator.generate()
 
     # code base operations
-    if code_setup.install_dependencies() != 0:
+    if code_setup is not None and code_setup.install_dependencies() != 0:
         print('Dependencies failed to install')
         exit(255)
 
-    if code_integration.run_tests() != 0:
+    if code_integration is not None and code_integration.run_tests() != 0:
         print("Unit tests failed")
         exit(255)
 
     # Finishing touches
     if sdk_repo.stage_changes() == 0 and sdk_repo.commit('Auto-update') == 0:
-        # Doing the push & PR (cascaded for readability)
-        if sdk_repo.push('origin', auto_branch, True) == 0:
-            sdk_repo.make_pull_request(branch_name, auto_branch)
+        # Pushing the created branches & creating the PR (cascaded for readability)
+        if sdk_repo.push('origin', base_branch, True) == 0 and sdk_repo.push('origin', integration_branch, True) == 0:
+            sdk_repo.make_pull_request(base_branch, integration_branch)
 
     exit(0)
