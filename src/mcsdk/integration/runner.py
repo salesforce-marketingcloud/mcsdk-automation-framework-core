@@ -46,11 +46,11 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    if sdk_repo.checkout(base_branch) != 0:
+    if sdk_repo.checkout(base_branch, False, True) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
 
-    if sdk_repo.checkout(integration_branch) != 0:
+    if sdk_repo.checkout(integration_branch, False, True) != 0:
         print("Could not checkout the integration branch for the SDK")
         exit(255)
 
@@ -69,7 +69,7 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     # Finishing touches
     if sdk_repo.stage_changes() == 0 and sdk_repo.commit('Auto-update') == 0:
         # Pushing the created branches & creating the PR (cascaded for readability)
-        if sdk_repo.push(base_branch, True) == 0 and sdk_repo.push('origin', integration_branch, True) == 0:
+        if sdk_repo.push('origin', base_branch, True) == 0 and sdk_repo.push('origin', integration_branch, True) == 0:
             sdk_repo.make_pull_request(base_branch, integration_branch)
 
     exit(0)

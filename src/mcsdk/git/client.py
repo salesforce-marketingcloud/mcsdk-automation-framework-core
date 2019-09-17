@@ -82,7 +82,7 @@ class RepoClient:
 
     def branch_delete(self, branch):
         """ Runs the branch delete command branch """
-        self.checkout('master', False, False)
+        self.checkout('master')
 
         chdir(self.__repo_dir)  # The checkout above changes the directory
 
@@ -142,24 +142,27 @@ class RepoClient:
 
         return 0
 
-    def checkout(self, branch, new_branch=False, auto_create=True):
+    def checkout(self, branch, force=False, auto_create=False):
         """ Executes a git checkout command of the given branch """
 
         # logging the working directory for debug
-        print('----- Branch checkout {new}: -----'.format(new='NEW' if new_branch is True else ''))
+        print('----- Branch checkout: -----')
         print('Repo name: ' + self.__repo_name)
         print('Branch name: ' + branch)
 
-        if not new_branch and not auto_create and not self.branch_exists(branch):
+        branch_exists = self.branch_exists(branch)
+
+        if not auto_create and not branch_exists:
             print('Branch does not exist and will not be created')
             return 255
 
         chdir(self.__repo_dir)
 
         # Command spec
-        cmd = 'git checkout -f {branch}'.format(branch=branch)
-        if new_branch and auto_create:
-            cmd = 'git checkout -b {branch}'.format(branch=branch)
+        cmd = 'git checkout{flag}{branch}'.format(
+            flag=' -b ' if auto_create and not branch_exists else ' -f ' if force else ' ',
+            branch=branch
+        )
 
         # Command to checkout the repo
         command = Command(cmd)
@@ -168,7 +171,7 @@ class RepoClient:
         if command.returned_errors():
             if command.get_output().find('did not match any file(s) known to git') != -1:
                 print('Branch does not exist. Trying to create it...\n')
-                self.checkout(branch, True)  # Creating the branch
+                self.checkout(branch, False, True)  # Creating the branch
             else:
                 print('Unknown error occurred')
                 print(command.get_output())
@@ -223,10 +226,8 @@ class RepoClient:
             print('Commit OK')
 
             output = command.get_output()
-
             if output.find('nothing to commit, working tree clean') != 0:
-                print('Branch will be deleted because there are no changes on the code')
-                self.branch_delete(self.branch())
+                print('There are no changes on the code, so the branch will not be pushed')
                 return 100
 
         return 0
