@@ -22,8 +22,8 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     repo_sdk_dir = config['repos']['sdk']['dir']
 
     base_branch = TRAVIS_BASE_BRANCH
-    head_branch = TRAVIS_HEAD_BRANCH
     integration_branch = 'ci/' + base_branch
+
 
     # Cloning the CORE repository in order to have access to swagger
     core_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
@@ -34,7 +34,7 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    if core_repo.fetch() != 0 or core_repo.checkout(head_branch, False, False) != 0:
+    if core_repo.fetch() != 0 or core_repo.checkout(TRAVIS_HEAD_BRANCH, False, False) != 0:
         exit(255)
 
     # Cloning the SDK repo
