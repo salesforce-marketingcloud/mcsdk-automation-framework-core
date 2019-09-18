@@ -75,5 +75,8 @@ def run(config, code_generator, code_setup=None, code_integration=None):
             if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
                 print("PR creation failed!")
                 exit(255)
+        else:
+            print("Could not push at least one of the branches on the remote!")
+            exit(255)
 
     exit(0)
