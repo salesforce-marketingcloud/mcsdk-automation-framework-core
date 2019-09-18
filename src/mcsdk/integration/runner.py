@@ -37,8 +37,6 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     if core_repo.fetch() != 0 or core_repo.checkout(TRAVIS_HEAD_BRANCH, False, False) != 0:
         exit(255)
 
-    exit(0)
-
     # Cloning the SDK repo
     sdk_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_sdk_owner, repo_sdk_name, repo_sdk_dir)
     clone_status_code = sdk_repo.clone()
@@ -55,6 +53,8 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     if sdk_repo.checkout(integration_branch, False, True) != 0:
         print("Could not checkout the integration branch for the SDK")
         exit(255)
+
+    exit(0)
 
     # code generation
     code_generator.generate()
