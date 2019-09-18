@@ -57,8 +57,6 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     # code generation
     code_generator.generate()
 
-    exit(0)
-
     # code base operations
     if code_setup is not None and code_setup.install_dependencies() != 0:
         print('Dependencies failed to install')
