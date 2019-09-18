@@ -54,10 +54,10 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print("Could not checkout the integration branch for the SDK")
         exit(255)
 
-    exit(0)
-
     # code generation
     code_generator.generate()
+
+    exit(0)
 
     # code base operations
     if code_setup is not None and code_setup.install_dependencies() != 0:
