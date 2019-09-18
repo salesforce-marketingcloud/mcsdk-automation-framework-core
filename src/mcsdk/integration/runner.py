@@ -63,7 +63,7 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         exit(255)
 
     if code_integration is not None and code_integration.run_tests() != 0:
-        print("Unit tests failed")
+        print("Unit tests failed!")
         exit(255)
 
     # Finishing touches
