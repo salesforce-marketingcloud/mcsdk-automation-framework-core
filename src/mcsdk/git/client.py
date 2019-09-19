@@ -243,6 +243,9 @@ class RepoClient:
             "Content-type": "application/json"
         }
 
+        # Added the version to the title to make it easier to see
+        title += ' ' + base_branch
+
         # Check if a PR is already present in the target branch
         response = requests.get(
             "https://api.github.com/repos/{owner}/{repo}/pulls".format(owner=self.__repo_owner, repo=self.__repo_name),
