@@ -34,7 +34,7 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    if core_repo.fetch() != 0 or core_repo.checkout(TRAVIS_HEAD_BRANCH, False, False) != 0:
+    if core_repo.fetch() != 0 or core_repo.checkout(TRAVIS_HEAD_BRANCH) != 0:
         exit(255)
 
     # Cloning the SDK repo
@@ -46,7 +46,7 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    if sdk_repo.checkout(base_branch, False, True) != 0:
+    if sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
 
