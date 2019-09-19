@@ -25,7 +25,8 @@ class Command:
                 or output.find("fatal:") != -1 \
                 or output.find('FAILURES!') != -1 \
                 or output.find('Exception in thread') != -1 \
-                or output.find('ERRORS!') != -1:
+                or output.find('ERRORS!') != -1 \
+                or output.find('Build FAILED') != -1:
             return True
         return False
 
