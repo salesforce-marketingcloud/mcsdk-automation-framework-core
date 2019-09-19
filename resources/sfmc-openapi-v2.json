@@ -104,7 +104,7 @@
           "asset"
         ],
         "summary": "deleteAssetById",
-        "description": "Deletes an asset.",
+        "description": "Deletes an assetttt.",
         "parameters": [
           {
             "name": "id",
