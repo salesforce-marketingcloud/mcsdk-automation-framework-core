@@ -3,12 +3,12 @@ from urllib import parse
 import requests
 
 
-def request_new_pr(repo):
+def request_new_build(repo):
     url = 'https://api.travis-ci.com/repo/{repo}/requests'.format(repo=parse.quote(repo, safe=''))
     base_branch = os.environ.get('TRAVIS_BRANCH')
     head_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
 
-    print('Automatic PR will be made from {head} to {base}'.format(base=base_branch, head=head_branch))
+    print('API call for repository: ' + repo)
 
     data = {
         'request': {
@@ -47,5 +47,5 @@ repos = [
 ]
 
 # Triggering the builds
-for repo in repos:
-    request_new_pr(repo)
+for repository in repos:
+    request_new_build(repository)
