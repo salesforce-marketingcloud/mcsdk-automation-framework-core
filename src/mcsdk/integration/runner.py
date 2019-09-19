@@ -55,7 +55,9 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         exit(255)
 
     # code generation
-    code_generator.generate()
+    if code_generator.generate() != 0:
+        print('Code generation failed!')
+        exit(255)
 
     # code base operations
     if code_setup is not None and code_setup.install_dependencies() != 0:
@@ -70,6 +72,11 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     if sdk_repo.stage_changes() == 0 and sdk_repo.commit('Auto-update') == 0:
         # Pushing the created branches & creating the PR (cascaded for readability)
         if sdk_repo.push('origin', base_branch, True) == 0 and sdk_repo.push('origin', integration_branch, True) == 0:
-            sdk_repo.make_pull_request(base_branch, integration_branch)
+            if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
+                print("PR creation failed!")
+                exit(255)
+        else:
+            print("Could not push at least one of the branches on the remote!")
+            exit(255)
 
     exit(0)
