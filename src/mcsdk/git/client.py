@@ -248,7 +248,7 @@ class RepoClient:
             "https://api.github.com/repos/{owner}/{repo}/pulls".format(owner=self.__repo_owner, repo=self.__repo_name),
             auth=HTTPBasicAuth(self.__repo_owner, self.__github_token),
             headers=headers,
-            data={"head": "{owner}:{head_branch}".format(owner=self.__repo_owner, head_branch=head_branch)}
+            params={"head": "{owner}:{head_branch}".format(owner=self.__repo_owner, head_branch=head_branch)}
         )
 
         if response.status_code != 200:
