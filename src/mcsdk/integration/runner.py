@@ -1,4 +1,4 @@
-from git.client import RepoClient
+from ..git.client import RepoClient
 from bootstrap import *
 
 
