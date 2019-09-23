@@ -24,7 +24,6 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     base_branch = TRAVIS_BASE_BRANCH
     integration_branch = 'ci/' + base_branch
 
-
     # Cloning the CORE repository in order to have access to swagger
     core_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
     clone_status_code = core_repo.clone()
