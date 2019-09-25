@@ -1,3 +1,4 @@
+import re
 from ..git.client import RepoClient
 from bootstrap import *
 
@@ -20,6 +21,10 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     repo_sdk_owner = config['repos']['sdk']['owner']
     repo_sdk_name = config['repos']['sdk']['name']
     repo_sdk_dir = config['repos']['sdk']['dir']
+
+    if re.search("^[0-9]+.0$", TRAVIS_BASE_BRANCH):
+        print('The base branch is not for a release version. No need to build / trigger anything!')
+        exit(0)
 
     base_branch = TRAVIS_BASE_BRANCH
     integration_branch = 'ci/' + base_branch
