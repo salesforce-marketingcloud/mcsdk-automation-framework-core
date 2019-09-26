@@ -42,8 +42,10 @@ def request_new_build(repo):
 owner = 'sfadincescu'
 
 repos = [
-    '{owner}/mcsdk-automation-framework-php'.format(owner=owner),
     '{owner}/mcsdk-automation-framework-csharp'.format(owner=owner),
+    '{owner}/mcsdk-automation-framework-java'.format(owner=owner),
+    '{owner}/mcsdk-automation-framework-php'.format(owner=owner),
+    '{owner}/mcsdk-automation-framework-node'.format(owner=owner)
 ]
 
 # Triggering the builds
