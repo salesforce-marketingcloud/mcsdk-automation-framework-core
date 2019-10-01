@@ -49,7 +49,7 @@ class RepoClient:
         """ Returns a list of current branches """
         chdir(self.__repo_dir)  # Go to repo dir
 
-        command = Command('git branch -a')
+        command = Command('git branch --all')
         command.run()
 
         chdir(self.__root_dir)  # Go to root dir

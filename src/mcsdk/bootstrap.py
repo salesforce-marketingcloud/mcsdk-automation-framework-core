@@ -14,6 +14,8 @@ TRAVIS_HEAD_BRANCH = os.getenv('HEAD_BRANCH', os.environ.get('TRAVIS_BRANCH'))
 
 print("Travis build directory is: " + TRAVIS_BUILD_DIR)
 print("Travis owner repo directory is: " + TRAVIS_REPO_OWNER_DIR)
+print("Travis base branch: " + TRAVIS_BASE_BRANCH)
+print("Travis head branch: " + TRAVIS_HEAD_BRANCH)
 
 # Define global vars
 resources_dir = os.path.join(TRAVIS_BUILD_DIR, 'resources')
