@@ -51,10 +51,13 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    pr_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH') # Try to use the PR branch as a base branch
-    if sdk_repo.branch_exists(pr_branch) and sdk_repo.checkout(pr_branch) != 0:
-        print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
-        exit(255)
+    pr_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')  # Try to use the PR branch as a base branch
+    print("Travis PR branch: " + pr_branch)
+
+    if sdk_repo.branch_exists(pr_branch):
+        if sdk_repo.checkout(pr_branch) != 0:
+            print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
+            exit(255)
     elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
