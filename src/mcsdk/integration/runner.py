@@ -22,6 +22,7 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     repo_sdk_name = config['repos']['sdk']['name']
     repo_sdk_dir = config['repos']['sdk']['dir']
 
+    # The build process should never run for non-release branches (like 'feature/' or 'hotfix/')
     if not re.search("^[0-9]+.0$", TRAVIS_BASE_BRANCH):
         print('The base branch is not for a release version. No need to build / trigger anything!')
         exit(0)
@@ -50,7 +51,11 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    if sdk_repo.checkout(base_branch) != 0:
+    pr_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH') # Try to use the PR branch as a base branch
+    if sdk_repo.branch_exists(pr_branch) and sdk_repo.checkout(pr_branch) != 0:
+        print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
+        exit(255)
+    elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
 
