@@ -67,8 +67,10 @@ class RepoClient:
         lines = self.__get_branches().split('\n')
         for line in lines:
             if line.find(branch) != -1:
+                print('Branch found!')
                 return True
 
+        print('Branch not found!')
         return False
 
     def branch(self):
