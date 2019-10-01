@@ -27,8 +27,12 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('The base branch is not for a release version. No need to build / trigger anything!')
         exit(0)
 
+    pr_branch = str(os.environ.get('TRAVIS_PULL_REQUEST_BRANCH'))
     base_branch = TRAVIS_BASE_BRANCH
     integration_branch = 'ci/' + base_branch
+    using_pr_branch = False
+
+    print("Travis PR branch: " + pr_branch)
 
     # Cloning the CORE repository in order to have access to swagger
     core_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
@@ -51,13 +55,12 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    pr_branch = str(os.environ.get('TRAVIS_PULL_REQUEST_BRANCH'))  # Try to use the PR branch as a base branch
-    print("Travis PR branch: " + pr_branch)
-
     if sdk_repo.branch_exists(pr_branch):
         if sdk_repo.checkout(pr_branch) != 0:
             print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
             exit(255)
+        else:
+            using_pr_branch = True
     elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
@@ -80,15 +83,28 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print("Unit tests failed!")
         exit(255)
 
-    # Finishing touches
+    # Finishing touches (WIP)
     if sdk_repo.stage_changes() == 0 and sdk_repo.commit('Auto-update') == 0:
-        # Pushing the created branches & creating the PR (cascaded for readability)
-        if sdk_repo.push('origin', base_branch, True) == 0 and sdk_repo.push('origin', integration_branch, True) == 0:
-            if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
-                print("PR creation failed!")
+        if using_pr_branch:
+            if sdk_repo.push('origin', integration_branch, True) == 0:
+                if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
+                    print("PR creation failed!")
+                    exit(255)
+            else:
+                print("Could not push branch {branch} to remote!".format(branch=integration_branch))
                 exit(255)
         else:
-            print("Could not push at least one of the branches on the remote!")
-            exit(255)
+            # Pushing the created branches & creating the PR (cascaded for readability)
+            if sdk_repo.push('origin', base_branch, True) == 0:
+                if sdk_repo.push('origin', integration_branch, True) == 0:
+                    if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
+                        print("PR creation failed!")
+                        exit(255)
+                else:
+                    print("Could not push branch {branch} to remote!".format(branch=integration_branch))
+                    exit(255)
+            else:
+                print("Could not push branch {branch} to remote!".format(branch=base_branch))
+                exit(255)
 
     exit(0)
