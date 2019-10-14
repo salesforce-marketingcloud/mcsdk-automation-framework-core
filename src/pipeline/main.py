@@ -18,6 +18,8 @@ def request_new_build(repo_owner, repo):
     repo_basename = repo.split('/')[1]
     builder_repo_dir = os.path.join(TRAVIS_REPO_OWNER_DIR, repo_basename)
     builder_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_owner, repo_basename, builder_repo_dir)
+    builder_repo.clone()
+    builder_repo.fetch()
 
     if builder_repo.branch_exists(pull_req_branch):
         if builder_repo.make_pull_request(base_branch, pull_req_branch) == 0:
