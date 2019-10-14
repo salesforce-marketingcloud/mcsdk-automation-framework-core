@@ -1,6 +1,8 @@
 import os
+
 import requests
 from requests.auth import HTTPBasicAuth
+
 from ..integration.os.process import Command
 from ..integration.os.utils import chdir
 
@@ -47,9 +49,12 @@ class RepoClient:
 
     def __get_branches(self):
         """ Returns a list of current branches """
+        if not os.path.isdir(self.__repo_dir):
+            return ''
+
         chdir(self.__repo_dir)  # Go to repo dir
 
-        command = Command('git branch --all')
+        command = Command('git branch --all', False)
         command.run()
 
         chdir(self.__root_dir)  # Go to root dir
@@ -62,6 +67,10 @@ class RepoClient:
 
     def branch_exists(self, branch):
         """ Checks if the branch exists """
+        if not len(branch):
+            raise ValueError('Branch name not provided')
+
+        # Logging
         print('Searching for branch: ' + branch)
 
         lines = self.__get_branches().split('\n')
@@ -73,8 +82,11 @@ class RepoClient:
         print('Branch not found!')
         return False
 
-    def branch(self):
+    def branch_current(self):
         """ Returns the current branch """
+        # Logging
+        print('Getting the current branch')
+
         lines = self.__get_branches().split('\n')
         for line in lines:
             if line.find('*') == 0:
@@ -84,6 +96,12 @@ class RepoClient:
 
     def branch_delete(self, branch):
         """ Runs the branch delete command branch """
+        if not len(branch):
+            raise ValueError('Branch name not provided')
+
+        # Logging
+        print('Deleting branch `{branch}`'.format(branch=branch))
+
         self.checkout('master')
 
         chdir(self.__repo_dir)  # The checkout above changes the directory
@@ -118,12 +136,15 @@ class RepoClient:
 
     def push(self, remote, branch, new=False):
         """ Executes a git push command of the given branch """
+        if not len(branch):
+            raise ValueError('Branch name not provided')
+
         chdir(self.__repo_dir)
 
         # logging the working directory for debug
         print('----- Branch push: -----')
         print('Repo name: ' + self.__repo_name)
-        print('Branch name: ' + branch)
+        print('Push to Branch: ' + branch)
 
         # Command spec
         cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
@@ -150,7 +171,12 @@ class RepoClient:
         # logging the working directory for debug
         print('----- Branch checkout: -----')
         print('Repo name: ' + self.__repo_name)
-        print('Branch name: ' + branch)
+        print('Checkout branch: ' + branch)
+
+        current_branch = self.branch_current()
+        if branch == current_branch:
+            print('Already on branch `{branch}`'.format(branch=branch))
+            return 0
 
         branch_exists = self.branch_exists(branch)
 
@@ -180,7 +206,7 @@ class RepoClient:
                 return 255
         else:
             print(command.get_output())
-            print('Working branch: {branch}'.format(branch=self.branch()) + '\n')
+            print('Working branch: {branch}'.format(branch=self.branch_current()) + '\n')
 
         chdir(self.__root_dir)  # Get back to previous directory
 

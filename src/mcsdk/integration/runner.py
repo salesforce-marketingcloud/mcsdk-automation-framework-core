@@ -18,7 +18,6 @@ def __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch=F
      -------
     int
         Execution status code: 0 success, 255 failure
-
     """
 
     # Using version branch to do the build
@@ -93,11 +92,10 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         exit(255)
 
     if sdk_repo.branch_exists(pr_branch):
+        using_pr_branch = True
         if sdk_repo.checkout(pr_branch) != 0:
             print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
             exit(255)
-        else:
-            using_pr_branch = True
     elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
