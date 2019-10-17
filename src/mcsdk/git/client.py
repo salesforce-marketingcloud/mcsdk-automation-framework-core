@@ -17,6 +17,7 @@ class RepoClient:
         self.__repo_owner = owner
         self.__repo_name = repo
         self.__repo_dir = repo_dir
+        self.__repo_remote = 'origin'  # TODO: Make optional parameter
 
     def clone(self):
         """ Executes a git clone command on the target repository """
@@ -60,8 +61,9 @@ class RepoClient:
         chdir(self.__root_dir)  # Go to root dir
 
         branches = command.get_output()
+        branches = branches.split('\n')
 
-        print("List of branches: " + branches)
+        print("List of branches: " + '\n'.join(branches))
 
         return branches
 
@@ -73,11 +75,13 @@ class RepoClient:
         # Logging
         print('Searching for branch: ' + branch)
 
-        lines = self.__get_branches().split('\n')
+        lines = self.__get_branches()
         for line in lines:
-            if line.find(branch) != -1:
-                print('Branch found!')
-                return True
+            line = line.strip()
+            for variant in ['* ' + branch, branch, 'remotes/' + self.__repo_remote + '/' + branch]:
+                if len(line) == len(variant) and line == variant:
+                    print('Branch found!')
+                    return True
 
         print('Branch not found!')
         return False
@@ -87,7 +91,7 @@ class RepoClient:
         # Logging
         print('Getting the current branch')
 
-        lines = self.__get_branches().split('\n')
+        lines = self.__get_branches()
         for line in lines:
             if line.find('*') == 0:
                 return line.lstrip('* ')
