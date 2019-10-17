@@ -7,18 +7,30 @@ validator.validate_env()
 
 # Define constants
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
-TRAVIS_BUILD_DIR = os.path.dirname(os.environ.get('TRAVIS_BUILD_DIR'))
-BUILDER_REPO_DIR = os.path.dirname(os.path.dirname(os.getcwd()))
+TRAVIS_BUILD_DIR = os.environ.get('TRAVIS_BUILD_DIR')
+TRAVIS_REPO_OWNER_DIR = os.path.dirname(TRAVIS_BUILD_DIR)
+TRAVIS_BASE_BRANCH = os.getenv('BASE_BRANCH', os.environ.get('TRAVIS_BRANCH'))
+TRAVIS_HEAD_BRANCH = os.getenv('HEAD_BRANCH', os.environ.get('TRAVIS_BRANCH'))
+
+print("Travis build directory is: " + TRAVIS_BUILD_DIR)
+print("Travis owner repo directory is: " + TRAVIS_REPO_OWNER_DIR)
+print("Travis base branch: " + TRAVIS_BASE_BRANCH)
+print("Travis head branch: " + TRAVIS_HEAD_BRANCH)
 
 # Define global vars
-resources_dir = os.path.join(BUILDER_REPO_DIR, 'resources')
+resources_dir = os.path.join(TRAVIS_BUILD_DIR, 'resources')
 config_dir = os.path.join(resources_dir, 'config')
 templates_dir = os.path.join(resources_dir, 'templates')
+config_file = os.sep.join([config_dir, 'ci-config.yml'])
+
+if not os.path.exists(config_file):
+    print('Configuration file {file} does not exist'.format(file=config_file))
+    exit(255)
 
 # Loading the configuration
-cfg = configurator.yaml_import(config_dir)
-cfg['repos']['core']['dir'] = os.path.abspath(os.path.join(TRAVIS_BUILD_DIR, cfg['repos']['core']['name']))
-cfg['repos']['sdk']['dir'] = os.path.abspath(os.path.join(TRAVIS_BUILD_DIR, cfg['repos']['sdk']['name']))
+cfg = configurator.yaml_import(config_file)
+cfg['repos']['core']['dir'] = os.path.abspath(os.path.join(TRAVIS_REPO_OWNER_DIR, cfg['repos']['core']['name']))
+cfg['repos']['sdk']['dir'] = os.path.abspath(os.path.join(TRAVIS_REPO_OWNER_DIR, cfg['repos']['sdk']['name']))
 
 # Custom stuff...manual work for now
 rep = ['{%repos_core_dir%}', cfg['repos']['core']['dir']]

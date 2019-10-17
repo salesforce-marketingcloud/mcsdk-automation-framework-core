@@ -2,14 +2,14 @@ from setuptools import setup
 
 setup(
     name='mcsdk-automation-framework-core',
-    version='1.0.0',
+    version='0.0.0',
     package_dir={'': 'src'},
     packages=[
         'mcsdk',
         'mcsdk.git',
         'mcsdk.integration',
         'mcsdk.integration.os',
-        'mcsdk.code'
+        'mcsdk.codebase'
     ],
     url='https://github.com/salesforce-marketingcloud/MCSDK-Automation-Framework-Core',
     license='',

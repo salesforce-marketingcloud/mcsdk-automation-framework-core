@@ -45,39 +45,76 @@ class RepoClient:
         print('Cloned repo {repo} to directory {dir}'.format(repo=self.__repo_name, dir=self.__repo_dir))
         return 0
 
-    def branch_exists(self, branch):
-        """ Checks if the branch exists """
-        chdir(self.__repo_dir)
+    def __get_branches(self):
+        """ Returns a list of current branches """
+        chdir(self.__repo_dir)  # Go to repo dir
 
-        command = Command(['git', 'branch'])
+        command = Command('git branch --all')
         command.run()
 
-        chdir(self.__root_dir)  # Get back to previous directory
+        chdir(self.__root_dir)  # Go to root dir
 
-        output = command.get_output()
-        lines = output.split('\n')
+        branches = command.get_output()
+
+        print("List of branches: " + branches)
+
+        return branches
+
+    def branch_exists(self, branch):
+        """ Checks if the branch exists """
+        print('Searching for branch: ' + branch)
+
+        lines = self.__get_branches().split('\n')
         for line in lines:
             if line.find(branch) != -1:
+                print('Branch found!')
                 return True
 
+        print('Branch not found!')
         return False
 
     def branch(self):
         """ Returns the current branch """
-        chdir(self.__repo_dir)
-
-        command = Command(['git', 'branch'])
-        command.run()
-
-        chdir(self.__root_dir)  # Get back to previous directory
-
-        output = command.get_output()
-        lines = output.split('\n')
+        lines = self.__get_branches().split('\n')
         for line in lines:
             if line.find('*') == 0:
                 return line.lstrip('* ')
 
-        return output
+        raise RuntimeError("Could not determine current branch")
+
+    def branch_delete(self, branch):
+        """ Runs the branch delete command branch """
+        self.checkout('master')
+
+        chdir(self.__repo_dir)  # The checkout above changes the directory
+
+        # Local delete
+        command = Command('git branch -D {branch}'.format(branch=branch))
+        command.run()
+        print("Branch delete (local): " + command.get_output())
+
+        if not command.returned_errors():
+            # Remote delete
+            command = Command('git push origin --delete {branch}'.format(branch=branch))
+            command.run()
+            print("Branch delete (remote): " + command.get_output())
+
+        chdir(self.__root_dir)  # Get back to previous directory
+
+        return command.returned_errors()
+
+    def fetch(self):
+        """ Runs the fetch command branch """
+        chdir(self.__repo_dir)
+
+        command = Command('git fetch --all')
+        command.run()
+
+        print("GIT fetch: " + command.get_output())
+
+        chdir(self.__root_dir)  # Get back to previous directory
+
+        return command.returned_errors()
 
     def push(self, remote, branch, new=False):
         """ Executes a git push command of the given branch """
@@ -89,9 +126,9 @@ class RepoClient:
         print('Branch name: ' + branch)
 
         # Command spec
-        cmd = ['git', 'push', remote, branch]
+        cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
         if new:
-            cmd.insert(2, '-u')
+            cmd = 'git push -u {remote} {branch}'.format(remote=remote, branch=branch)
 
         # Command to push to the repo
         command = Command(cmd)
@@ -104,26 +141,30 @@ class RepoClient:
             return 255
 
         print('Branch {branch} has been pushed to {remote}'.format(remote=remote, branch=branch))
+
         return 0
 
-    def checkout(self, branch, new=False, auto_create=True):
+    def checkout(self, branch, force=False, auto_create=False):
         """ Executes a git checkout command of the given branch """
 
         # logging the working directory for debug
-        print('----- Branch checkout {new}: -----'.format(new='NEW' if new is True else ''))
+        print('----- Branch checkout: -----')
         print('Repo name: ' + self.__repo_name)
         print('Branch name: ' + branch)
 
-        if not new and not auto_create and not self.branch_exists(branch):
+        branch_exists = self.branch_exists(branch)
+
+        if not auto_create and not branch_exists:
             print('Branch does not exist and will not be created')
             return 255
 
         chdir(self.__repo_dir)
 
         # Command spec
-        cmd = ['git', 'checkout', '-f', branch]
-        if new and auto_create:
-            cmd.insert(2, '-b')
+        cmd = 'git checkout{flag}{branch}'.format(
+            flag=' -b ' if auto_create and not branch_exists else ' -f ' if force else ' ',
+            branch=branch
+        )
 
         # Command to checkout the repo
         command = Command(cmd)
@@ -132,8 +173,7 @@ class RepoClient:
         if command.returned_errors():
             if command.get_output().find('did not match any file(s) known to git') != -1:
                 print('Branch does not exist. Trying to create it...\n')
-                self.checkout(branch, True)  # Creating the branch
-                self.push('origin', branch, True)  # Push to origin
+                self.checkout(branch, False, True)  # Creating the branch
             else:
                 print('Unknown error occurred')
                 print(command.get_output())
@@ -154,7 +194,7 @@ class RepoClient:
         print('----- Stage changes: -----')
 
         # Command to checkout the repo
-        command = Command(['git', 'add', '--all'])
+        command = Command('git add --all')
         command.run()
 
         chdir(self.__root_dir)  # Get back to previous directory
@@ -176,7 +216,7 @@ class RepoClient:
         print('----- Committing changes: -----')
 
         # Command to checkout the repo
-        command = Command(['git', 'commit', '-m', message])
+        command = Command('git commit -m {message}'.format(message=message))
         command.run()
 
         chdir(self.__root_dir)  # Get back to previous directory
@@ -186,7 +226,12 @@ class RepoClient:
             return 255
         else:
             print('Commit OK')
-            print(command.get_output())
+
+            output = command.get_output()
+            if output.find('nothing to commit, working tree clean') != -1:
+                print('There are no changes on the code, so the branch will not be pushed')
+                print(output)
+                return 100
 
         return 0
 
@@ -200,12 +245,15 @@ class RepoClient:
             "Content-type": "application/json"
         }
 
+        # Added the version to the title to make it easier to see
+        title += ' ' + base_branch
+
         # Check if a PR is already present in the target branch
         response = requests.get(
             "https://api.github.com/repos/{owner}/{repo}/pulls".format(owner=self.__repo_owner, repo=self.__repo_name),
             auth=HTTPBasicAuth(self.__repo_owner, self.__github_token),
             headers=headers,
-            data={"head": "{owner}:{head_branch}".format(owner=self.__repo_owner, head_branch=head_branch)}
+            params={"head": "{owner}:{head_branch}".format(owner=self.__repo_owner, head_branch=head_branch)}
         )
 
         if response.status_code != 200:
@@ -240,4 +288,5 @@ class RepoClient:
             return response.status_code
 
         print("Created the PR")
+
         return 0
