@@ -262,6 +262,7 @@ class RepoClient:
                 print('There are no changes on the code, so the branch will not be pushed!')
                 print(output)
                 # No longer return error when no changes are detected
+                return -1
 
         return 0
 

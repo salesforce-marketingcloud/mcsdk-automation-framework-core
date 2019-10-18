@@ -124,17 +124,18 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         exit(255)
 
     # Commit the change to the SDK repository
-    if sdk_repo.commit('Auto-update') != 0:
+    commit_status = sdk_repo.commit('Auto-update')
+    if commit_status > 0:
         print("Could not commit changes on the SDK repo")
         exit(255)
+    elif commit_status == 0:
+        # Pushing the necessary branches on the remote
+        if __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch) != 0:
+            exit(255)  # Message is displayed from the function
 
-    # Pushing the necessary branches on the remote
-    if __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch) != 0:
-        exit(255)  # Message is displayed from the function
-
-    # Creating the PR
-    if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
-        print("PR creation failed!")
-        exit(255)
+        # Creating the PR
+        if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
+            print("PR creation failed!")
+            exit(255)
 
     exit(0)
