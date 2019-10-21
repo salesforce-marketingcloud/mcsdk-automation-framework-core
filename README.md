@@ -1,2 +1,1 @@
-# MCSDK-Automation-Framework-Core
-This will serve as a core repository for the MC SDK Automation Framework. This repo will have the Master Open API Specification file, the swagger CLI code, the CI scripts and the language specific mustache files
+This serves as a core repository for the MC SDK Automation Framework. This repo contains the Master Open API Specification file, the swagger-codegen CLI, and the CI scripts for triggering the Automation Pipeline for each supported language.
