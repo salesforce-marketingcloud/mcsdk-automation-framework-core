@@ -4,14 +4,16 @@ import subprocess
 class Command:
     """ Command runner class """
 
-    def __init__(self, command):
+    def __init__(self, command, debug=True):
         """ Class constructor """
         self.__command = command
         self.__output = b''
+        self.__debug = debug
 
     def run(self):
         """ Runs the command and returns the status code """
-        print("Running command: " + self.get_command())
+        if self.__debug:
+            print("Running command: " + self.get_command())
 
         result = subprocess.run(self.__command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
         self.__output = result.stdout

@@ -18,7 +18,6 @@ def __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch=F
      -------
     int
         Execution status code: 0 success, 255 failure
-
     """
 
     # Using version branch to do the build
@@ -92,12 +91,11 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    if sdk_repo.branch_exists(pr_branch):
+    if len(pr_branch) and sdk_repo.branch_exists(pr_branch):
+        using_pr_branch = True
         if sdk_repo.checkout(pr_branch) != 0:
             print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
             exit(255)
-        else:
-            using_pr_branch = True
     elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
@@ -126,17 +124,18 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         exit(255)
 
     # Commit the change to the SDK repository
-    if sdk_repo.commit('Auto-update') != 0:
+    commit_status = sdk_repo.commit('Auto-update')
+    if commit_status > 0:
         print("Could not commit changes on the SDK repo")
         exit(255)
+    elif commit_status == 0:
+        # Pushing the necessary branches on the remote
+        if __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch) != 0:
+            exit(255)  # Message is displayed from the function
 
-    # Pushing the necessary branches on the remote
-    if __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch) != 0:
-        exit(255)  # Message is displayed from the function
-
-    # Creating the PR
-    if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
-        print("PR creation failed!")
-        exit(255)
+        # Creating the PR
+        if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
+            print("PR creation failed!")
+            exit(255)
 
     exit(0)
