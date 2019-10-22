@@ -20,7 +20,7 @@
         "tags": [
           "asset"
         ],
-        "summary": "getAssetById",
+        "summary": "getAssetByIdTestPipeline",
         "description": "Gets an asset by ID.",
         "parameters": [
           {
