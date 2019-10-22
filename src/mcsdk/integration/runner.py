@@ -3,15 +3,51 @@ from ..git.client import RepoClient
 from bootstrap import *
 
 
+def __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch=False):
+    """
+    The function performs the necessary logic to push the required branches to the remote
+
+    Parameters
+    ----------
+         sdk_repo : RepoClient
+         base_branch : str
+         integration_branch : str
+         using_pr_branch : bool
+
+     Returns
+     -------
+    int
+        Execution status code: 0 success, 255 failure
+    """
+
+    # Using version branch to do the build
+    if not using_pr_branch:
+        if sdk_repo.push('origin', base_branch, True) != 0:
+            print("Could not push branch {branch} to remote!".format(branch=base_branch))
+            return 255
+
+    if sdk_repo.push('origin', integration_branch, True) != 0:
+        print("Could not push branch {branch} to remote!".format(branch=integration_branch))
+        return 255
+
+    return 0
+
+
 def run(config, code_generator, code_setup=None, code_integration=None):
     """
     Runs the integration
 
-    Arguments:
-        :type config: dict
-        :type code_generator: mcsdk.code.generator.AbstractGenerator
-        :type code_setup: mcsdk.code.codebase.AbstractCodeSetup
-        :type code_integration: mcsdk.code.codebase.AbstractCodeIntegration
+    Parameters
+    ----------
+        config : dict
+        code_generator : mcsdk.code.codebase.AbstractGenerator
+        code_setup : mcsdk.code.codebase.AbstractCodeSetup
+        code_integration : mcsdk.code.codebase.AbstractCodeIntegration
+
+    Returns
+    -------
+    None
+
     """
     # Vars for the integration run
     repo_core_owner = config['repos']['core']['owner']
@@ -22,12 +58,17 @@ def run(config, code_generator, code_setup=None, code_integration=None):
     repo_sdk_name = config['repos']['sdk']['name']
     repo_sdk_dir = config['repos']['sdk']['dir']
 
+    # The build process should never run for non-release branches (like 'feature/' or 'hotfix/')
     if not re.search("^[0-9]+.0$", TRAVIS_BASE_BRANCH):
         print('The base branch is not for a release version. No need to build / trigger anything!')
         exit(0)
 
+    pr_branch = str(os.environ.get('TRAVIS_PULL_REQUEST_BRANCH'))
     base_branch = TRAVIS_BASE_BRANCH
     integration_branch = 'ci/' + base_branch
+    using_pr_branch = False
+
+    print("Travis PR branch: " + pr_branch)
 
     # Cloning the CORE repository in order to have access to swagger
     core_repo = RepoClient(TRAVIS_REPO_OWNER_DIR, GITHUB_TOKEN, repo_core_owner, repo_core_name, repo_core_dir)
@@ -50,7 +91,12 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print('Could not clone repository')
         exit(255)
 
-    if sdk_repo.checkout(base_branch) != 0:
+    if len(pr_branch) and sdk_repo.branch_exists(pr_branch):
+        using_pr_branch = True
+        if sdk_repo.checkout(pr_branch) != 0:
+            print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
+            exit(255)
+    elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
 
@@ -72,15 +118,24 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print("Unit tests failed!")
         exit(255)
 
-    # Finishing touches
-    if sdk_repo.stage_changes() == 0 and sdk_repo.commit('Auto-update') == 0:
-        # Pushing the created branches & creating the PR (cascaded for readability)
-        if sdk_repo.push('origin', base_branch, True) == 0 and sdk_repo.push('origin', integration_branch, True) == 0:
-            if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
-                print("PR creation failed!")
-                exit(255)
-        else:
-            print("Could not push at least one of the branches on the remote!")
+    # Stage the change to the SDK repository
+    if sdk_repo.stage_changes() != 0:
+        print("Could not stage changes on the SDK repo")
+        exit(255)
+
+    # Commit the change to the SDK repository
+    commit_status = sdk_repo.commit('Auto-update')
+    if commit_status > 0:
+        print("Could not commit changes on the SDK repo")
+        exit(255)
+    elif commit_status == 0:
+        # Pushing the necessary branches on the remote
+        if __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch) != 0:
+            exit(255)  # Message is displayed from the function
+
+        # Creating the PR
+        if sdk_repo.make_pull_request(base_branch, integration_branch) != 0:
+            print("PR creation failed!")
             exit(255)
 
     exit(0)

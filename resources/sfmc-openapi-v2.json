@@ -890,6 +890,7 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "description": "JSON Parameters",
             "schema": {
               "$ref": "#/definitions/UpdateSmsDefinitionRequest"
