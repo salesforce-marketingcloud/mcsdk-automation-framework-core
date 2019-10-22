@@ -11,9 +11,9 @@ setup(
         'mcsdk.integration.os',
         'mcsdk.codebase'
     ],
-    url='https://github.com/salesforce-marketingcloud/MCSDK-Automation-Framework-Core',
+    url='https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core',
     license='',
-    author='sfadincescu',
-    author_email='adincescu@salesforce.com',
+    author='salesforce-marketingcloud',
+    author_email='splumlee@salesforce.com',
     description='The library handles part of the CI process'
 )
