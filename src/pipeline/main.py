@@ -64,7 +64,7 @@ def request_new_build(repo_owner, repo):
 
 
 # Code vars
-owner = 'sfadincescu'
+owner = 'salesforce-marketingcloud'
 
 repos = [
     '{owner}/mcsdk-automation-framework-csharp'.format(owner=owner),
