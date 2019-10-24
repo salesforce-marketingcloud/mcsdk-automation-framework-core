@@ -199,6 +199,22 @@
           }
         },
         "operationId": "createCampaign"
+      },
+      "get":{
+        "tags": [
+          "campaign"
+        ],
+        "operationId": "getAllCampaigns",
+        "summary": "getAllCampaigns",
+        "description": "Gets all campaigns.",
+        "responses":{
+          "200": {
+            "description": "All Campaigns successfully retrieved",
+            "schema": {
+              "$ref": "#/definitions/GetAllCampaignsResponse"
+            }
+          }
+        }
       }
     },
     "/hub/v1/campaigns/{id}": {
@@ -1604,6 +1620,29 @@
           "type": "string",
           "format": "date-time",
           "readOnly": true
+        }
+      }
+    },
+    "GetAllCampaignsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Campaign"
+          }
+        },
+        "count": {
+          "description": "Number of pages",
+          "type": "integer"
+        },
+        "page": {
+          "description": "Page number to return.",
+          "type": "integer"
+        },
+        "pageSize": {
+          "description": "Number of campaigns, which are array elements, to return per paged response.",
+          "type": "integer"
         }
       }
     },
