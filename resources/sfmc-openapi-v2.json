@@ -3,7 +3,7 @@
   "info": {
     "title": "Marketing Cloud REST API",
     "description": "Marketing Cloud's REST API is our newest API. It supports multi-channel use cases, is much more lightweight and easy to use than our SOAP API, and is getting more comprehensive with every release.",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "contact": {
       "name": "MC SDK Team",
       "email": "mc_sdk@salesforce.com"
