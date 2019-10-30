@@ -21,6 +21,8 @@ To add a new REST route to the generated SDK,
 6. You can then download the SDK project and test the changes in the new branch. 
 7. As of now, the process of merging the code to the Master branch is set to Manual for first phase. It would also be automated in future releases. 
 
+## Contact us
+
 - Request a [new feature](https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc), add a question or report a bug on GitHub.
 - Vote for [Popular Feature Requests](https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) by making relevant comments and add your reaction. Use a reaction in place of a "+1" comment:
     - 👍 - upvote
