@@ -1,6 +1,7 @@
 import json
 import os
 from urllib import parse
+from mcsdk.integration.open_api_spec_validator import *
 
 import requests
 from mcsdk.git.client import RepoClient
@@ -8,6 +9,11 @@ from mcsdk.git.client import RepoClient
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 TRAVIS_BUILD_DIR = os.environ.get('TRAVIS_BUILD_DIR')
 TRAVIS_REPO_OWNER_DIR = os.path.dirname(TRAVIS_BUILD_DIR)
+
+# Open API spec validation
+if validate_spec() != 0:
+    print('Open API spec validation failed!')
+    exit(255)
 
 
 def request_new_build(repo_owner, repo):
