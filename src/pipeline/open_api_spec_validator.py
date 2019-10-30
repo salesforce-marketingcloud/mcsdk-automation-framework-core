@@ -1,4 +1,4 @@
-from integration.os.process import Command
+from mcsdk.integration.os.process import Command
 from mcsdk.bootstrap import cfg
 
 
