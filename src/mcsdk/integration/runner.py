@@ -1,5 +1,6 @@
 import re
 from ..git.client import RepoClient
+from ..integration.open_api_spec_validator import *
 from bootstrap import *
 
 
@@ -102,6 +103,11 @@ def run(config, code_generator, code_setup=None, code_integration=None):
 
     if sdk_repo.checkout(integration_branch, False, True) != 0:
         print("Could not checkout the integration branch for the SDK")
+        exit(255)
+
+    # Open API spec validation
+    if validate_spec() != 0:
+        print('Open API spec validation failed!')
         exit(255)
 
     # code generation
