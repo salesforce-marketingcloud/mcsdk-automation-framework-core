@@ -1,7 +1,7 @@
 import json
 import os
 from urllib import parse
-from mcsdk.integration.open_api_spec_validator import *
+from open_api_spec_validator import *
 
 import requests
 from mcsdk.git.client import RepoClient

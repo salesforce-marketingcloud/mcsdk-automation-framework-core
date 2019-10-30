@@ -1,6 +1,6 @@
 import os
-from integration import validator
-from integration import configurator
+from mcsdk.integration import validator
+from mcsdk.integration import configurator
 
 # Check if the environment if properly set up
 validator.validate_env()

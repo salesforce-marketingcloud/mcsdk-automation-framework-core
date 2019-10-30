@@ -1,5 +1,5 @@
-from ..integration.os.process import Command
-from bootstrap import *
+from integration.os.process import Command
+from mcsdk.bootstrap import cfg
 
 
 def validate_spec():
