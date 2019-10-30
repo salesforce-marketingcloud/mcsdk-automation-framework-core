@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+  "swagger": "2.0",,
   "info": {
     "title": "Marketing Cloud REST API",
     "description": "Marketing Cloud's REST API is our newest API. It supports multi-channel use cases, is much more lightweight and easy to use than our SOAP API, and is getting more comprehensive with every release.",
@@ -15,7 +15,7 @@
   },
   "host": "www.exacttargetapis.com",
   "paths": {
-    "/asset/v1/content/assets/{id}": {
+    "/asset/v1/content/assets/{idx}": {
       "get": {
         "tags": [
           "asset"
