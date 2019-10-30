@@ -1,6 +1,6 @@
 # ** This project is under development ** 
 
-# Salesforce Marketing Cloud - Automation Swagger Framework SDK
+# Salesforce Marketing Cloud - SDK Automation with SwaggerCodegen
 
 ## Overview
 This repo is part of the Salesforce Marketing Cloud SDK Automation Framework. It holds the Open Api Specification json file which is used for the SDK Generation in four different languages (C#, Java, Php and Node). 
