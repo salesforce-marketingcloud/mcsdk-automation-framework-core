@@ -1,15 +1,20 @@
 from mcsdk.integration.os.process import Command
-from mcsdk.bootstrap import cfg
+import os
+
+TRAVIS_BUILD_DIR = os.environ.get('TRAVIS_BUILD_DIR')
 
 
 def validate_spec():
+    open_api_spec_path = os.path.join(TRAVIS_BUILD_DIR, 'resources', 'sfmc-openapi-v2.json')
+    swagger_codegen_cli_path = os.path.join(TRAVIS_BUILD_DIR, 'bin', 'swagger-codegen-cli.jar')
+
     cmd = ' '.join([
         'java',
         '-jar',
-        '{swagger_exec}'.format(swagger_exec=cfg['repos']['core']['swagger_cli']),
+        '{swagger_exec}'.format(swagger_exec=swagger_codegen_cli_path),
         'validate',
         '-i',
-        '{spec_file}'.format(spec_file=cfg['repos']['core']['swagger_spec'])
+        '{spec_file}'.format(spec_file=open_api_spec_path)
     ])
 
     command = Command(cmd)
