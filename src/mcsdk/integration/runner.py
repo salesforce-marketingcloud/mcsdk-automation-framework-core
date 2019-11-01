@@ -96,6 +96,10 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         if sdk_repo.checkout(pr_branch) != 0:
             print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
             exit(255)
+    elif TRAVIS_BASE_BRANCH != TRAVIS_HEAD_BRANCH and sdk_repo.branch_exists(TRAVIS_HEAD_BRANCH):
+        if sdk_repo.checkout(TRAVIS_HEAD_BRANCH) != 0:
+            print("Could not checkout the HEAD branch for the SDK {branch}".format(branch=TRAVIS_HEAD_BRANCH))
+            exit(255)
     elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
