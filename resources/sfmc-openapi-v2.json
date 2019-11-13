@@ -319,7 +319,7 @@
         "description": "Gets a list of email definitions.",
         "parameters": [
           {
-            "name": "status",
+            "name": "$filter",
             "in": "query",
             "description": "Filter by status type. Accepted values are active, inactive, or deleted. Valid operations are eq and neq.",
             "required": false,
@@ -331,21 +331,21 @@
             ]
           },
           {
-            "name": "pageSize",
+            "name": "$pageSize",
             "in": "query",
             "description": "Number of definitions, which are array elements, to return per paged response.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "page",
+            "name": "$page",
             "in": "query",
             "description": "Page number to return.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "orderBy",
+            "name": "$orderBy",
             "in": "query",
             "description": "Sort by a dimension. You can sort by only one dimension. Accepted values are definitionKey, name, createdDate, modifiedDate, and status.",
             "required": false,
@@ -1035,7 +1035,7 @@
         "description": "Gets a list of SMS definitions.",
         "parameters": [
           {
-            "name": "status",
+            "name": "$filter",
             "in": "query",
             "description": "Filter by status type. Accepted values are active, inactive, or deleted. Valid operations are eq and neq.",
             "required": false,
@@ -1047,21 +1047,21 @@
             ]
           },
           {
-            "name": "pageSize",
+            "name": "$pageSize",
             "in": "query",
             "description": "Number of definitions, which are array elements, to return per paged response.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "page",
+            "name": "$page",
             "in": "query",
             "description": "Page number to return.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "orderBy",
+            "name": "$orderBy",
             "in": "query",
             "description": "Sort by a dimension. You can sort by only one dimension. Accepted values are definitionKey, name, createdDate, modifiedDate, and status.",
             "required": false,
