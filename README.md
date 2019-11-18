@@ -27,4 +27,4 @@ To add a new REST route to the generated SDK,
     - 👎 - downvote
 
 ## License
-By contributing your code, you agree to license your contribution under the terms of the [BSD 3-Clause License](https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core/blob/documentation/license.md).
+By contributing your code, you agree to license your contribution under the terms of the [BSD 3-Clause License](https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core/blob/documentation/LICENSE.md).
