@@ -19,6 +19,9 @@ To add a new REST route to the generated SDK,
 6. You can then download the SDK project and test the changes in the new branch. 
 7. As of now, the process of merging the code to the Master branch is set to Manual for first phase. It would also be automated in future releases. 
 
+### Note
+Any changes to the existing Open API Spec file like changing the name of the parameters, making an optional parameter required, changing the request/response model names introduce breaking changes and will break the customers who are using the Automations SDKs.
+
 ## Contact us
 
 - Request a [new feature](https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc), add a question or report a bug on GitHub.
@@ -27,4 +30,4 @@ To add a new REST route to the generated SDK,
     - 👎 - downvote
 
 ## License
-By contributing your code, you agree to license your contribution under the terms of the [BSD 3-Clause License](https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core/blob/documentation/LICENSE.md).
+By contributing your code, you agree to license your contribution under the terms of the [BSD 3-Clause License](https://github.com/salesforce-marketingcloud/mcsdk-automation-framework-core/blob/master/LICENSE.md).
