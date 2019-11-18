@@ -15,7 +15,7 @@ To add a new REST route to the generated SDK,
 2. Make sure the format is correct without any errors. [Swagger Online Editor](https://editor.swagger.io/) is an amazing tool to play with the Open Api Spec files. It has the ability to identify formatting errors.
 3. Push the changes to remote and create a PR against the most recent version branch from your new branch.
 4. This PR would trigger the Travis CI process. 
-5. At the end of the CI Process, A new branch would be created on the [SDK Repo](https://github.com/salesforce-marketingcloud/mcsdk-automation-csharp). Also a PR would be created against the most recent version branch in the SDK Repo's. 
+5. At the end of the CI Process, a new branch would be created on the [SDK Repo](https://github.com/salesforce-marketingcloud/mcsdk-automation-csharp). Also a PR would be created against the most recent version branch in the SDK Repo. 
 6. You can then download the SDK project and test the changes in the new branch. 
 7. As of now, the process of merging the code to the Master branch is set to Manual for first phase. It would also be automated in future releases. 
 
