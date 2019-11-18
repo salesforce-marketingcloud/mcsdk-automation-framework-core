@@ -273,7 +273,7 @@
             "description": "JSON Parameters",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CreateEmailDefinitionRequest"
+              "$ref": "#/definitions/EmailDefinition"
             }
           }
         ],
@@ -281,7 +281,7 @@
           "201": {
             "description": "A single definition for an email",
             "schema": {
-              "$ref": "#/definitions/CreateEmailDefinitionRequest"
+              "$ref": "#/definitions/EmailDefinition"
             }
           },
           "400": {
@@ -319,7 +319,7 @@
         "description": "Gets a list of email definitions.",
         "parameters": [
           {
-            "name": "status",
+            "name": "$filter",
             "in": "query",
             "description": "Filter by status type. Accepted values are active, inactive, or deleted. Valid operations are eq and neq.",
             "required": false,
@@ -331,21 +331,21 @@
             ]
           },
           {
-            "name": "pageSize",
+            "name": "$pageSize",
             "in": "query",
             "description": "Number of definitions, which are array elements, to return per paged response.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "page",
+            "name": "$page",
             "in": "query",
             "description": "Page number to return.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "orderBy",
+            "name": "$orderBy",
             "in": "query",
             "description": "Sort by a dimension. You can sort by only one dimension. Accepted values are definitionKey, name, createdDate, modifiedDate, and status.",
             "required": false,
@@ -466,7 +466,7 @@
           "200": {
             "description": "A single definition for an email",
             "schema": {
-              "$ref": "#/definitions/CreateEmailDefinitionRequest"
+              "$ref": "#/definitions/EmailDefinition"
             }
           },
           "400": {
@@ -509,7 +509,7 @@
           "200": {
             "description": "Definition of email successfully retrieved",
             "schema": {
-              "$ref": "#/definitions/CreateEmailDefinitionRequest"
+              "$ref": "#/definitions/EmailDefinition"
             }
           },
           "400": {
@@ -843,7 +843,7 @@
           "200": {
             "description": "Definition of SMS successfully retrieved",
             "schema": {
-              "$ref": "#/definitions/CreateSmsDefinitionRequest"
+              "$ref": "#/definitions/SmsDefinition"
             }
           },
           "400": {
@@ -901,7 +901,7 @@
           "200": {
             "description": "A single definition for an SMS",
             "schema": {
-              "$ref": "#/definitions/CreateSmsDefinitionRequest"
+              "$ref": "#/definitions/SmsDefinition"
             }
           },
           "400": {
@@ -989,7 +989,7 @@
             "description": "JSON Parameters",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CreateSmsDefinitionRequest"
+              "$ref": "#/definitions/SmsDefinition"
             }
           }
         ],
@@ -997,7 +997,7 @@
           "201": {
             "description": "A single definition for an sms",
             "schema": {
-              "$ref": "#/definitions/CreateSmsDefinitionRequest"
+              "$ref": "#/definitions/SmsDefinition"
             }
           },
           "400": {
@@ -1035,7 +1035,7 @@
         "description": "Gets a list of SMS definitions.",
         "parameters": [
           {
-            "name": "status",
+            "name": "$filter",
             "in": "query",
             "description": "Filter by status type. Accepted values are active, inactive, or deleted. Valid operations are eq and neq.",
             "required": false,
@@ -1047,21 +1047,21 @@
             ]
           },
           {
-            "name": "pageSize",
+            "name": "$pageSize",
             "in": "query",
             "description": "Number of definitions, which are array elements, to return per paged response.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "page",
+            "name": "$page",
             "in": "query",
             "description": "Page number to return.",
             "required": false,
             "type": "number"
           },
           {
-            "name": "orderBy",
+            "name": "$orderBy",
             "in": "query",
             "description": "Sort by a dimension. You can sort by only one dimension. Accepted values are definitionKey, name, createdDate, modifiedDate, and status.",
             "required": false,
@@ -1607,7 +1607,7 @@
         }
       }
     },
-    "CreateEmailDefinitionRequest": {
+    "EmailDefinition": {
       "type": "object",
       "required": [
         "definitionKey",
@@ -1658,13 +1658,13 @@
           "readOnly": true
         },
         "content": {
-          "$ref": "#/definitions/CreateEmailDefinitionContent"
+          "$ref": "#/definitions/EmailDefinitionContent"
         },
         "subscriptions": {
-          "$ref": "#/definitions/CreateEmailDefinitionSubscriptions"
+          "$ref": "#/definitions/EmailDefinitionSubscriptions"
         },
         "options": {
-          "$ref": "#/definitions/CreateEmailDefinitionOptionsRequest"
+          "$ref": "#/definitions/EmailDefinitionOptions"
         }
       }
     },
@@ -1676,7 +1676,7 @@
           "type": "string"
         },
         "content": {
-          "$ref": "#/definitions/CreateEmailDefinitionContent"
+          "$ref": "#/definitions/EmailDefinitionContent"
         },
         "status": {
           "description": "Operational state of the definition: active, inactive, or deleted. A message sent to an active definition is processed and delivered. A message sent to an inactive definition isn’t processed or delivered. Instead, the message is queued for later processing for up to three days.",
@@ -1691,10 +1691,10 @@
           "type": "string"
         },
         "subscriptions": {
-          "$ref": "#/definitions/CreateEmailDefinitionSubscriptions"
+          "$ref": "#/definitions/EmailDefinitionSubscriptions"
         },
         "options": {
-          "$ref": "#/definitions/CreateEmailDefinitionOptionsRequest"
+          "$ref": "#/definitions/EmailDefinitionOptions"
         }
       }
     },
@@ -1706,7 +1706,7 @@
           "type": "string"
         },
         "content": {
-          "$ref": "#/definitions/CreateSmsDefinitionContent"
+          "$ref": "#/definitions/SmsDefinitionContent"
         },
         "status": {
           "description": "Operational state of the definition: active, inactive, or deleted. A message sent to an active definition is processed and delivered. A message sent to an inactive definition isn’t processed or delivered. Instead, the message is queued for later processing for up to three days.",
@@ -1717,7 +1717,7 @@
           "type": "string"
         },
         "subscriptions": {
-          "$ref": "#/definitions/CreateSmsDefinitionSubscriptions"
+          "$ref": "#/definitions/SmsDefinitionSubscriptions"
         }
       }
     },
@@ -1731,7 +1731,7 @@
         "definitions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CreateEmailDefinitionRequest"
+            "$ref": "#/definitions/EmailDefinition"
           }
         },
         "count": {
@@ -1748,7 +1748,7 @@
         }
       }
     },
-    "CreateEmailDefinitionContent": {
+    "EmailDefinitionContent": {
       "type": "object",
       "required": [
         "customerKey"
@@ -1760,7 +1760,7 @@
         }
       }
     },
-    "CreateEmailDefinitionSubscriptions": {
+    "EmailDefinitionSubscriptions": {
       "type": "object",
       "required": [
         "list"
@@ -1785,7 +1785,7 @@
         }
       }
     },
-    "CreateEmailDefinitionOptionsRequest": {
+    "EmailDefinitionOptions": {
       "type": "object",
       "properties": {
         "trackLinks": {
@@ -2111,7 +2111,7 @@
         }
       }
     },
-    "CreateSmsDefinitionRequest": {
+    "SmsDefinition": {
       "type": "object",
       "required": [
         "definitionKey",
@@ -2129,7 +2129,7 @@
           "type": "string"
         },
         "content": {
-          "$ref": "#/definitions/CreateSmsDefinitionContent"
+          "$ref": "#/definitions/SmsDefinitionContent"
         },
         "status": {
           "description": "Operational state of the definition: active, inactive, or deleted. A message sent to an active definition is processed and delivered. A message sent to an inactive definition isn’t processed or delivered. Instead, the message is queued for later processing for up to three days.",
@@ -2152,7 +2152,7 @@
           "type": "string"
         },
         "subscriptions": {
-          "$ref": "#/definitions/CreateSmsDefinitionSubscriptions"
+          "$ref": "#/definitions/SmsDefinitionSubscriptions"
         },
         "requestId": {
           "description": "The ID of the request",
@@ -2161,7 +2161,7 @@
         }
       }
     },
-    "CreateSmsDefinitionContent": {
+    "SmsDefinitionContent": {
       "type": "object",
       "required": [
         "message"
@@ -2173,7 +2173,7 @@
         }
       }
     },
-    "CreateSmsDefinitionSubscriptions": {
+    "SmsDefinitionSubscriptions": {
       "type": "object",
       "required": [
         "shortCode",
@@ -2209,7 +2209,7 @@
         "definitions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CreateSmsDefinitionRequest"
+            "$ref": "#/definitions/SmsDefinition"
           }
         },
         "count": {

@@ -1,6 +1,7 @@
 import json
 import os
 from urllib import parse
+from open_api_spec_validator import *
 
 import requests
 from mcsdk.git.client import RepoClient
@@ -9,9 +10,14 @@ GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 TRAVIS_BUILD_DIR = os.environ.get('TRAVIS_BUILD_DIR')
 TRAVIS_REPO_OWNER_DIR = os.path.dirname(TRAVIS_BUILD_DIR)
 
+# Open API spec validation
+if validate_spec() != 0:
+    print('Open API spec validation failed!')
+    exit(255)
+
 
 def request_new_build(repo_owner, repo):
-    base_branch = os.environ.get('TRAVIS_BRANCH')
+    base_branch = target_branch = os.environ.get('TRAVIS_BRANCH')
     pull_req_branch = os.environ.get('TRAVIS_PULL_REQUEST_BRANCH')
 
     # PR build trigger
@@ -22,15 +28,11 @@ def request_new_build(repo_owner, repo):
     builder_repo.fetch()
 
     if builder_repo.branch_exists(pull_req_branch):
-        if builder_repo.make_pull_request(base_branch, pull_req_branch) == 0:
-            return True
-        else:
-            print("Could not create PR on builder repository!")
-            print('Falling back to the normal flow...')
+        target_branch = pull_req_branch
 
     data = {
         'request': {
-            'branch': base_branch,
+            'branch': target_branch,
             'config': {
                 'env': {
                     'BASE_BRANCH': base_branch,
