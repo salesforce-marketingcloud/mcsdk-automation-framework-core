@@ -21,10 +21,10 @@ def __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch=F
     """
 
     # Using version branch to do the build
-    if not using_pr_branch:
-        if sdk_repo.push('origin', base_branch, True) != 0:
-            print("Could not push branch {branch} to remote!".format(branch=base_branch))
-            return 255
+    # if not using_pr_branch:
+    #     if sdk_repo.push('origin', base_branch, True) != 0:
+    #         print("Could not push branch {branch} to remote!".format(branch=base_branch))
+    #         return 255
 
     if sdk_repo.push('origin', integration_branch, True) != 0:
         print("Could not push branch {branch} to remote!".format(branch=integration_branch))
