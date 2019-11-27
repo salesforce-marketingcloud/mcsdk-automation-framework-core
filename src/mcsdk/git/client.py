@@ -88,9 +88,6 @@ class RepoClient:
 
     def branch_current(self):
         """ Returns the current branch """
-        # Logging
-        print('Getting the current branch')
-
         lines = self.__get_branches()
         for line in lines:
             if line.find('*') == 0:
@@ -222,6 +219,7 @@ class RepoClient:
 
         # logging the working directory for debug
         print('----- Stage changes: -----')
+        print('Current branch: ' + self.branch_current())
 
         # Command to checkout the repo
         command = Command('git add --all')

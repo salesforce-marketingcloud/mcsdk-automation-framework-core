@@ -133,6 +133,10 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print("Could not commit changes on the SDK repo")
         exit(255)
     elif commit_status == 0:
+        if sdk_repo.branch_current() != integration_branch:
+            print('I am no longer on the integration branch!')
+            exit(255)
+
         # Pushing the necessary branches on the remote
         if __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch) != 0:
             exit(255)  # Message is displayed from the function
