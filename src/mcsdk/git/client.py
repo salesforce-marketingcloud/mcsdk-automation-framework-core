@@ -215,12 +215,12 @@ class RepoClient:
 
     def stage_changes(self):
         """ Executes a git add command on the working branch """
-        chdir(self.__repo_dir)
-
         # logging the working directory for debug
         print('----- Stage changes: -----')
         print('Current branch: ' + self.branch_current())
         print('Working dir: ' + os.getcwd())
+
+        chdir(self.__repo_dir)
 
         # Command to checkout the repo
         command = Command('git add --all')
