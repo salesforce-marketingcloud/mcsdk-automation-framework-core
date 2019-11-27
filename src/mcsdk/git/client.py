@@ -220,6 +220,7 @@ class RepoClient:
         # logging the working directory for debug
         print('----- Stage changes: -----')
         print('Current branch: ' + self.branch_current())
+        print('Working dir: ' + os.getcwd())
 
         # Command to checkout the repo
         command = Command('git add --all')
