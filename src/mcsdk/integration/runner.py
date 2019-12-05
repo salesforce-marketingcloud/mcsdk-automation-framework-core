@@ -21,10 +21,10 @@ def __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch=F
     """
 
     # Using version branch to do the build
-    if not using_pr_branch:
-        if sdk_repo.push('origin', base_branch, True) != 0:
-            print("Could not push branch {branch} to remote!".format(branch=base_branch))
-            return 255
+    # if not using_pr_branch:
+    #     if sdk_repo.push('origin', base_branch, True) != 0:
+    #         print("Could not push branch {branch} to remote!".format(branch=base_branch))
+    #         return 255
 
     if sdk_repo.push('origin', integration_branch, True) != 0:
         print("Could not push branch {branch} to remote!".format(branch=integration_branch))
@@ -96,6 +96,10 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         if sdk_repo.checkout(pr_branch) != 0:
             print("Could not checkout the PR branch for the SDK {pr_branch}".format(pr_branch=pr_branch))
             exit(255)
+    elif TRAVIS_BASE_BRANCH != TRAVIS_HEAD_BRANCH and sdk_repo.branch_exists(TRAVIS_HEAD_BRANCH):
+        if sdk_repo.checkout(TRAVIS_HEAD_BRANCH) != 0:
+            print("Could not checkout the HEAD branch for the SDK {branch}".format(branch=TRAVIS_HEAD_BRANCH))
+            exit(255)
     elif sdk_repo.checkout(base_branch) != 0:
         print("Could not checkout the base branch for the SDK")
         exit(255)
@@ -129,6 +133,10 @@ def run(config, code_generator, code_setup=None, code_integration=None):
         print("Could not commit changes on the SDK repo")
         exit(255)
     elif commit_status == 0:
+        if sdk_repo.branch_current() != integration_branch:
+            print('I am no longer on the integration branch!')
+            exit(255)
+
         # Pushing the necessary branches on the remote
         if __push_branches(sdk_repo, base_branch, integration_branch, using_pr_branch) != 0:
             exit(255)  # Message is displayed from the function
