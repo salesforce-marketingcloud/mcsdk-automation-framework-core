@@ -2256,7 +2256,8 @@
       }
     },
     "Attributes": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": true
     },
     "SendSmsToMultipleRecipientsSubscriptionsRequest": {
       "type": "object",
